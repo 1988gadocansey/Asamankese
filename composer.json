@@ -1,0 +1,17 @@
+{
+     
+   
+
+ 
+ 
+    "require": {
+        "swiftmailer/swiftmailer": "~5.3"
+    },
+    "autoload":{
+        "classmap": [
+			"library/classes"
+			 
+		]
+    }
+     
+}
