@@ -334,7 +334,7 @@ td{
                                                 if($house=="All houses" or $house=="" ){ $house=""; }else {$house_=" and HOUSE = '$house' "  ;}
                                        
                                                 if($status=="All status" or $status=="" ){ $status=""; }else {$status_=" and STATUS = '$status' "  ;}
-                                                if($search=="" ){ $search=""; }else {$search_="AND $content LIKE '$search' "  ;}
+                                                if($search=="" ){ $search=""; }else {$search_="AND $content LIKE '%$search%' "  ;}
 
                                               $_SESSION[last_query]=     $query =$sql->Prepare( "SELECT * FROM tbl_student WHERE 1 $program_  $class_  $search_ $gender_ $house_ $status_ $year_ ");
                                                    
