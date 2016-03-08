@@ -17,16 +17,12 @@ endif;
 define('RECORDS_BY_PAGE', 100);
 define('CURRENT_PAGE', $page);
 $GenericEasyPagination = new _classes_\GenericEasyPagination(CURRENT_PAGE, RECORDS_BY_PAGE, "eng");
-function age($birthdate, $pattern = 'eu') {
-    $patterns = array(
-        'eu' => 'd/m/Y',
-        'mysql' => 'Y-m-d',
-        'us' => 'm/d/Y',
-        'gh' => 'd-m-Y',
-    );
-
-    $now = new DateTime();
-    $in = DateTime::createFromFormat($patterns[$pattern], $birthdate);
-    $interval = $now->diff($in);
-    return $interval->y;
+function age($birthday) {
+    list($day, $month, $year) = explode("/", $birthday);
+ $year_diff  = date("Y") - $year;
+ $month_diff = date("m") - $month;
+ $day_diff   = date("d") - $day;
+ if ($day_diff < 0 && $month_diff==0) $year_diff--;
+ if ($day_diff < 0 && $month_diff < 0) $year_diff--;
+ return $year_diff;
 }

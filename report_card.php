@@ -44,7 +44,8 @@
 			$thisterm=$school->TERM;
 			$thisyear=$school->YEAR;
 			  $query=$sql->Prepare("Select *,tbl_class_members.class as stage from tbl_student,tbl_classes,tbl_class_members where tbl_student.ID='$_GET[student]'  and tbl_class_members.student=tbl_student.indexno and tbl_classes.name=tbl_student.class and tbl_class_members.year='$thisyear' and tbl_class_members.term='$thisterm' ");
-                        $result=$sql->Execute($query) ; 
+                        
+                          $result=$sql->Execute($query) ; 
                          
                         while($row = $result->FetchRow())
                         { 
@@ -118,7 +119,7 @@
             <?php 
 		  
 		  
-		$stmt=$sql->Prepare("select * from tbl_grades,tbl_courses,tbl_subjects where tbl_grades.stuId='$_GET[student]' and tbl_grades.year='$school->YEAR' and tbl_grades.term='$school->TERM' and tbl_grades.courseId=tbl_courses.id and tbl_subjects.type='core' and tbl_subjects.name=tbl_courses.name");
+		$stmt=$sql->Prepare("select * from tbl_assesments,tbl_courses,tbl_subjects where tbl_assesments.stuId='$_GET[student]' and tbl_assesments.year='$school->YEAR' and tbl_assesments.term='$school->TERM' and tbl_assesments.courseId=tbl_courses.id and tbl_subjects.type='core' and tbl_subjects.name=tbl_courses.name");
 		 
                 $stmt=$sql->Execute($stmt);
                 $t=$stmt->RecordCount();
@@ -130,7 +131,7 @@
                 ?>
           <tr bordercolor="#AED7FF"  bgcolor="<?php echo (((++$AltColors1) % 2) == 0) ? "#F7F0DB" : "#FFFFFF"; ?>"  >
             <td height="43" nowrap='nowrap' ><div align="left"><?php echo $r[name]; ?></div></td>
-              <td ><div align="center"><?php echo ($r[quiz1]+$r[quiz2]+$r[quiz3]+$r[quiz4]) ;?></div></td>
+              <td ><div align="center"><?php echo ($r[test1]+$r[test2]+$r[test3]+$r[test4]) ;?></div></td>
               <td ><div align="center"><?php echo $r[exam];?></div></td>
               <td ><div align="center"><?php echo $r[total]; $ttotal+=$r[total]; if($r['total']>0){ $cout=$cout+100;}?></div></td>
               <td width="81" >

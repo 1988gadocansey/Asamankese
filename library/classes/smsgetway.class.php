@@ -89,6 +89,7 @@ class smsgetway{
                  }
             // admitted sms
             public function sendAdmitted($phone,$message,$applicant){
+                $year=(date('Y')-1)."/".date('Y');
             $phone="+233".\substr($phone,1,9);
             $url = 'http://txtconnect.co/api/send/'; 
             $fields = array( 
@@ -122,7 +123,7 @@ class smsgetway{
                   return $info;
                     }else{ 
                         $date=time();
-                        $insertor=$this->connect->Prepare("insert into tbl_sms set number='$phone',type='$type',name='$_SESSION[ID]',applicant='$applicant',message='$message',dates='$date',status='Not Delivered',year='$year'");
+                        $insertor=$this->connect->Prepare("insert into tbl_sms set number='$phone',type='$type',name='$applicant' ,message='$message',dates='$date',status='Not Delivered',year='$year'");
                         $this->connect->Execute($insertor) ;
 
                     $info="Message failed to send. Error: " . $data->error; 

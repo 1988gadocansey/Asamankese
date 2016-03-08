@@ -77,18 +77,18 @@ if(isset($_GET[add])==1){
     $row=$stmt->FetchNextObject();
     
     $index=$help->getIndexNo($_POST[programme]).$row->NO;
-  $_SESSION[indexno]=$index;
-   
+ echo $_SESSION[indexno]=$index;
+   echo $_POST[dob];
       $rt=$sql->Prepare("SELECT * FROM tbl_student WHERE ID='$_POST[id]'");
      $rt=$sql->Execute($rt);
-      $age=age($_POST[dob], "mysql");
+      $age=age($_POST[dob]);
        print_r( $_POST[department],$_POST[programme],$_POST[combination],$_POST[dob],$_POST[surname],$_POST[othername],$_POST[gender],$index,$age,$_POST[type],$_POST[region],$_POST[hometown],$_POST[country],$_POST[house] , $_POST[class_admitted],$_POST[religion],$_POST[contact_address],$_POST[disability],$_POST[email],$_POST[date_admitted],$year,$_POST["class"]);
    
       if(empty($_POST[id]) ){
     $newStudent=0; // he is a new student
-    $query=$sql->Prepare("INSERT INTO tbl_student SET DEPARTMENT=".$sql->Param('azz').",PROGRAMME=".$sql->Param('ass').", SUBJECT_COMBINATIONS=".$sql->Param('ay').",  DOB=".$sql->Param('a').", SURNAME=".$sql->Param('b')."  , OTHERNAMES=".$sql->Param('c').", GENDER=".$sql->Param('d').",INDEXNO=".$sql->Param('e').",AGE=".$sql->Param('f').",STUDENT_TYPE=".$sql->Param('g')." ,REGION=".$sql->Param('h').",HOMETOWN=".$sql->Param('i').",NATIONALITY=".$sql->Param('j').",HOUSE=".$sql->Param('l').",CLASS_ADMITED=".$sql->Param('m').",RELIGION=".$sql->Param('n').",CONTACT_ADDRESS=".$sql->Param('o').",DISABILITY=".$sql->Param('p').",EMAIL=".$sql->Param('q').",DATE_ADMITED=".$sql->Param('r').",YEAR_GROUP=".$sql->Param('s').",CLASS=".$sql->Param('z')." ");
+    $query=$sql->Prepare("INSERT INTO tbl_student SET STATUS=".$sql->Param('y2k').", DEPARTMENT=".$sql->Param('azz').",PROGRAMME=".$sql->Param('ass').", SUBJECT_COMBINATIONS=".$sql->Param('ay').",  DOB=".$sql->Param('a').", SURNAME=".$sql->Param('b')."  , OTHERNAMES=".$sql->Param('c').", GENDER=".$sql->Param('d').",INDEXNO=".$sql->Param('e').",AGE=".$sql->Param('f').",STUDENT_TYPE=".$sql->Param('g')." ,REGION=".$sql->Param('h').",HOMETOWN=".$sql->Param('i').",NATIONALITY=".$sql->Param('j').",HOUSE=".$sql->Param('l').",CLASS_ADMITED=".$sql->Param('m').",RELIGION=".$sql->Param('n').",CONTACT_ADDRESS=".$sql->Param('o').",DISABILITY=".$sql->Param('p').",EMAIL=".$sql->Param('q').",DATE_ADMITED=".$sql->Param('r').",YEAR_GROUP=".$sql->Param('s').",CLASS=".$sql->Param('z')." ");
             
-           if( $query=$sql->Execute( $query,array($_POST[department],$_POST[programme],$_POST[combination],$_POST[dob],$_POST[surname],$_POST[othername],$_POST[gender],$index,$age,$_POST[type],$_POST[region],$_POST[hometown],$_POST[country],$_POST[house] , $_POST[class_admitted],$_POST[religion],$_POST[contact_address],$_POST[disability],$_POST[email],$_POST[date_admitted],$year,$_POST["class"]))){
+           if( $query=$sql->Execute( $query,array($_POST[status],$_POST[department],$_POST[programme],$_POST[combination],$_POST[dob],$_POST[surname],$_POST[othername],$_POST[gender],$index,$age,$_POST[type],$_POST[region],$_POST[hometown],$_POST[country],$_POST[house] , $_POST[class_admitted],$_POST[religion],$_POST[contact_address],$_POST[disability],$_POST[email],$_POST[date_admitted],$year,$_POST["class"]))){
             
                $_SESSION[indexno]=$index;
                
@@ -143,9 +143,9 @@ if(isset($_GET[add])==1){
 
 
 
-        $query=$sql->Prepare("UPDATE tbl_student SET DEPARTMENT=".$sql->Param('azz').",PROGRAMME=".$sql->Param('ass').", SUBJECT_COMBINATIONS=".$sql->Param('ay').", DOB=".$sql->Param('a').", SURNAME=".$sql->Param('b')."  , OTHERNAMES=".$sql->Param('c').", GENDER=".$sql->Param('d').",AGE=".$sql->Param('f').",STUDENT_TYPE=".$sql->Param('g')." ,REGION=".$sql->Param('h').",HOMETOWN=".$sql->Param('i').",NATIONALITY=".$sql->Param('j').",HOUSE=".$sql->Param('l').",CLASS_ADMITED=".$sql->Param('m').",RELIGION=".$sql->Param('n').",CONTACT_ADDRESS=".$sql->Param('o').",DISABILITY=".$sql->Param('p').",EMAIL=".$sql->Param('q').",DATE_ADMITED=".$sql->Param('r').",YEAR_GROUP=".$sql->Param('s')." ,CLASS=".$sql->Param('z')." WHERE ID='$_POST[id]' ") ;
+        $query=$sql->Prepare("UPDATE tbl_student SET STATUS=".$sql->Param('y2k').", DEPARTMENT=".$sql->Param('azz').",PROGRAMME=".$sql->Param('ass').", SUBJECT_COMBINATIONS=".$sql->Param('ay').", DOB=".$sql->Param('a').", SURNAME=".$sql->Param('b')."  , OTHERNAMES=".$sql->Param('c').", GENDER=".$sql->Param('d').",AGE=".$sql->Param('f').",STUDENT_TYPE=".$sql->Param('g')." ,REGION=".$sql->Param('h').",HOMETOWN=".$sql->Param('i').",NATIONALITY=".$sql->Param('j').",HOUSE=".$sql->Param('l').",CLASS_ADMITED=".$sql->Param('m').",RELIGION=".$sql->Param('n').",CONTACT_ADDRESS=".$sql->Param('o').",DISABILITY=".$sql->Param('p').",EMAIL=".$sql->Param('q').",DATE_ADMITED=".$sql->Param('r').",YEAR_GROUP=".$sql->Param('s')." ,CLASS=".$sql->Param('z')." WHERE ID='$_POST[id]' ") ;
          print_r(array($_POST[dob],$_POST[surname],$_POST[othername],$_POST[gender],$_POST[indexno],$age,$_POST[type],$_POST[region],$_POST[hometown],$_POST[country],$_POST[program],$_POST[house] , $_POST[class_admitted],$_POST[religion],$_POST[contact_address],$_POST[disability],$_POST[email],$_POST[date_admitted],$year,$_POST["class"]));
-           if( $sql->Execute( $query,array($_POST[department],$_POST[programme],$_POST[combination],$_POST[dob],$_POST[surname],$_POST[othername],$_POST[gender],$age,$_POST[type],$_POST[region],$_POST[hometown],$_POST[country],$_POST[house] , $_POST[class_admitted],$_POST[religion],$_POST[contact_address],$_POST[disability],$_POST[email],$_POST[date_admitted],$year,$_POST["class"]))){
+           if( $sql->Execute( $query,array($_POST[status],$_POST[department],$_POST[programme],$_POST[combination],$_POST[dob],$_POST[surname],$_POST[othername],$_POST[gender],$age,$_POST[type],$_POST[region],$_POST[hometown],$_POST[country],$_POST[house] , $_POST[class_admitted],$_POST[religion],$_POST[contact_address],$_POST[disability],$_POST[email],$_POST[date_admitted],$year,$_POST["class"]))){
               $_SESSION[indexno]=$_POST[indexno];
                
               
@@ -667,7 +667,26 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                                           
                                     </div>
                                     
-                                     
+                                       <br/>
+                                       <div class="input-group">
+                                       <span class="input-group-addon">Status</span>
+                                        <div class="fg-line">
+                                            <select class='form-control'  name='status'  placeholder="status of student"  required=""   >
+                                                            <option value=''>Choose status</option>
+                                                            
+                                                 <option value='In School'<?php if($rows->STATUS=='In School'){echo 'selected="selected"'; }?>>In School</option>
+                                        <option value='Alumni'<?php if($rows->STATUS=='Alumni'){echo 'selected="selected"'; }?>>Alumni</option>
+                                        <option value='Deffered'<?php if($rows->STATUS=='Deffered'){echo 'selected="selected"'; }?>>Deffered</option>
+                                        <option value='Dead'<?php if($rows->STATUS=='Dead'){echo 'selected="selected"'; }?>>Dead</option>
+                                        <option value='Suspended'<?php if($rows->STATUS=='Suspended'){echo 'selected="selected"'; }?>>Suspended</option>
+                                        <option value='Rasticated'<?php if($rows->STATUS=='Rasticated'){echo 'selected="selected"'; }?>>Rasticated</option>
+
+                                                        
+                                            </select>
+                                           
+                                        </div>
+                                          
+                                    </div>
                                 </div>
                                   <div class="col-sm-4">                       
                                    
@@ -792,7 +811,7 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
     
                                                 } else {
                                                     echo 'disabled="disabled"';
-                                                } ?> id="insertpic" value="Upload" />
+                                                } ?> id="" value="Upload" />
 
 
                                             </div>
@@ -806,9 +825,9 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                                           <div class="form-group">
                                               <br/>
                                             <?php      if($_SESSION[level]=="Administrator" ){?>  
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                        <a  style="margin-left:25%"href="addStudent.php?new" class="btn btn-primary btn-sm">Add New Student</a>
-                                    </div>
+                                               <div class="col-sm-offset-2 col-sm-10"><center>
+                                        <a  style="margin-left:-177px"href="addStudent.php?new" class="btn btn-success btn-sm">Add New Student</a>
+                                              </center>    </div>
                                             <?php } ?>  
                                           </div> 
 </center>

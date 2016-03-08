@@ -547,7 +547,7 @@ $(document).ready(function(){
     //Date
     if ($('.date-picker')[0]) {
     	$('.date-picker').datetimepicker({
-    	    format: ' YYYY-MM-DD'
+    	    format: ' DD/MM/YYYY'
            
     	});
     }

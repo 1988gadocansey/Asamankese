@@ -23,7 +23,7 @@ while ($rt = $output->FetchRow()) {
         
         while ($row = $out->FetchRow()) {
            
-            $rmt = $sql->Prepare("select * from tbl_grades where courseId='$row[ID]' and stuId='$rt[ID]' and year='$year' and term='$term'");
+            $rmt = $sql->Prepare("select * from tbl_assesments where courseId='$row[ID]' and stuId='$rt[ID]' and year='$year' and term='$term'");
             
             $rts = $sql->Execute($rmt);
               
@@ -31,7 +31,7 @@ while ($rt = $output->FetchRow()) {
                   
             } else {
                 
-                $query12 = $sql->Prepare("insert into tbl_grades(courseId,stuId,class,year,term) values('$row[ID]', '$rt[ID]', '$rt[CLASS]', '$year', '$term' )");
+                $query12 = $sql->Prepare("insert into tbl_assesments(courseId,stuId,class,year,term) values('$row[ID]', '$rt[ID]', '$rt[CLASS]', '$year', '$term' )");
                 
                 $sql->Execute($query12);
             }
@@ -44,7 +44,7 @@ while ($rt = $output->FetchRow()) {
         $rtmt = $sql->Execute($input);
         while ($rt = $rtmt->FetchRow()) {
 
-            $in = $sql->Prepare("select * from tbl_grades where courseId='$rt[ID]' and stuId='$rt[ID]' and year='$year' and term='$term'");
+            $in = $sql->Prepare("select * from tbl_assesments where courseId='$rt[ID]' and stuId='$rt[ID]' and year='$year' and term='$term'");
              
             $qt = $sql->Execute($in);
              if ($qt->RecordCount() > 0) {
@@ -54,7 +54,7 @@ while ($rt = $output->FetchRow()) {
                  print_r($stmt22);
                  $ss=$sql->Execute( $stmt22);
                  $rw=$ss->FetchNextObject();
-                 $inner = $sql->Prepare("insert into tbl_grades(courseId,stuId,class,year,term) values('$rt[ID]', '$rw->ID', '$rw->CLASS', '$year', '$term' )");
+                 $inner = $sql->Prepare("insert into tbl_assesments(courseId,stuId,class,year,term) values('$rt[ID]', '$rw->ID', '$rw->CLASS', '$year', '$term' )");
                  print_r($inner);
                  $sql->Execute($inner);
             
@@ -70,12 +70,12 @@ while ($rt = $output->FetchRow()) {
 
         while ($row = $rmt->FetchRow()) {
 
-            $in = $sql->Prepare("SELECT * from tbl_grades where courseId='$row[ID]' and stuId='$rt[ID]' and year='$year' and term='$term'");
+            $in = $sql->Prepare("SELECT * from tbl_assesments where courseId='$row[ID]' and stuId='$rt[ID]' and year='$year' and term='$term'");
             $exe = $sql->Execute($in);
             if  ($exe->RecordCount() > 0) {
                 
             } else {
-                $query22 = $sql->Prepare("insert into tbl_grades(courseId,stuId,class,year,term) values(" . $sql->Param('a') . ")," . $sql->Param('b') . "," . $sql->Param('c') . "," . $sql->Param('d') . "," . $sql->Param('e') . "   ");
+                $query22 = $sql->Prepare("insert into tbl_assesments(courseId,stuId,class,year,term) values(" . $sql->Param('a') . ")," . $sql->Param('b') . "," . $sql->Param('c') . "," . $sql->Param('d') . "," . $sql->Param('e') . "   ");
                 $sql->Execute($query22, array($row[ID], $rt[ID], $rt['CLASS'], $year, $term));
             }
         }

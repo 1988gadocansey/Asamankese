@@ -91,9 +91,15 @@
 
                      
                 	    <td>&nbsp;</td>
+                             <td>&nbsp;</td>
+                              <td>&nbsp;</td>
+                              <td>&nbsp;</td>
+                              <td>&nbsp;</td>
+                              <td>&nbsp;</td>
+                              <td>&nbsp;</td>
                             <?php   if($teacher->USER_TYPE=='Administrator'){?>
                 <td width="25%">
-                 <select class='form-control'   id='status' onChange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?class='+escape(this.value);"   style="margin-left:14%; ">
+                 <select class=''   id='status' onChange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?class='+escape(this.value);"   style="margin-left:14px; ">
                  <option value=''>Filter by class</option>
                   	  <option value='all'>All</option>
                       <?php 
@@ -117,7 +123,7 @@
             </td>
                             <?php }?>
 				 <td width="25%">
-                <select class='form-control'  name='year'  style="margin-left:2%;" onchange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?subject='+escape(this.value);" >
+                <select class=' '  name='year'  style="margin-left:2%;" onchange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?subject='+escape(this.value);" >
                   <option value=''>Filter subject</option>
                   	  <option value='all'>All</option>
                       <?php 
@@ -143,7 +149,7 @@
                <td>&nbsp;</td>
                  <td width="20%">
 
-            <select class='form-control'  name='year'  style="margin-left:-25%;  " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?term='+escape(this.value);" >
+            <select class=''  name='year'  style="margin-left:-25%;  " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?term='+escape(this.value);" >
                              <option value=''>Filter by term</option>
                             <option value='all'>All</option>
                   	        <option value='1'>1</option>
@@ -156,11 +162,11 @@
          <td>&nbsp;</td>
           <td width="30%">
 
-            <select class='form-control'  name='year'  style="margin-left:-14%; " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?year='+escape(this.value);" >
+            <select class=''  name='year'    onchange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?year='+escape(this.value);" >
                              <option value=''>Filter by academic year</option>
                             <option value='all'>All</option>
                   	         <?php
-							 	for($i=2008; $i<=date("Y"); $i++){
+							 	for($i=1990; $i<=date("Y"); $i++){
 									$a=$i - 1 ."/". $i;
 										echo "<option value='$a'>$a</option>";
 									
@@ -178,6 +184,7 @@
  
  
 <p>&nbsp;</p>
+<hr>
             </div><!--end .row -->
              
              <?php 
@@ -221,39 +228,39 @@
                      $query= $sql->Prepare( "SELECT * FROM tbl_courses AS c JOIN tbl_workers AS w ON c.teacherID=w.emp_number AND c.teacherID='$teacher->EMP_NUMBER'  $end_query ");
                  
                   }
-                                    print_r($query);
-											 $stmt =$sql->Prepare($query);
-                                                    $out=$sql->Execute($stmt);
-                                                    $total=$out->RecordCount();
-                                                    if($out->RecordCount()>0){
+                                   // print_r($query);
+											 
+                                                     $rs = $sql->PageExecute($query,RECORDS_BY_PAGE,CURRENT_PAGE);
+                                                      $recordsFound = $rs->_maxRecordCount;    // total record found
+                                                     if (!$rs->EOF) 
+                                                     {
              ?>
               <p style="color:green"><center>Filter by (<?php echo $end_query;?>) Total records = <?php echo $total; ?></center></p>
                     <div class="table-responsive">
-                        <table id="data-table-command" class="table table-bordered table-vmiddle table-hover"  >
+                        <table id="" class="table table-striped table-vmiddle table-hover"  >
                             <thead>
                                 <tr>
-                                    <th style ='display:none' data-visible="false" data-identifier="true" data-column-id="id" >keys</th>
-                                     <th>No</th>
+                                       <th>No</th>
                                      <th data-column-id="Subject" data-type=" " data-toggle="tooltip">Subject</th>
-                                    <th style="text-align:center" data-type="string" data-column-id="Class" style="text-align:center">Class</th>
+                                    <th style="text-align: " data-type="string" data-column-id="Class" style="text-align:center">Class</th>
                                     <th data-column-id="Teacher">Teacher</th>
-                                    <th data-column-id="Academic Year" data-order="asc" style="text-align:center">Academic Year</th>
+                                    <th data-column-id="Academic Year" data-order="asc" style="text-align: ">Academic Year</th>
                                     <th data-column-id="Term" style="text-align:center">Term</th>
                                     
-                                    <th data-column-id="No of Students" data-order="asc" style="text-align:center">No of Students</th>
-                                     <th  data-column-id="link" data-formatter="link"></th>
+                                    <th data-column-id="No of Students" data-order="asc" style="text-align:center ">No of Students</th>
+                                     <th  data-column-id="link" data-formatter="link">Actions</th>
                                     
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                 $count=0;
-                                    while($rt=$out->FetchRow()){
+                                    while($rt=$rs->FetchRow()){
                                                             $count++;
 															
                                        ?>
                                     <tr>
-                                    <td data-visible="false"><?php echo $rt[id] ?></td>
+                                    
                                      <td><?php echo $count ?></td>
                                   	 
                                     <td id='no' style="text-align:left"><?php  echo $rt[name] ?></td>
@@ -263,11 +270,19 @@
                                     <td style="text-align:center"><?php  echo $rt[term] ?></td>
                                     <td style="text-align:center"><?php  echo $student->getTotalStudent_by_Class($rt[classId],$school->YEAR,$school->TERM); ?></td>
                                      
-                                
+                                    <td><a     href="list.php?class=<?php echo $rt[classId] ?>&subject=<?php echo $rt[id] ?> " ><span class="md md-edit"></span>   </a></td>
                                      </tr>
                                     <?php } ?>
                             </tbody>
-                          </table></div>
+                          </table>  <br/>
+                     <center><?php
+                     
+                         $GenericEasyPagination->setTotalRecords($recordsFound);
+	  
+                        echo $GenericEasyPagination->getNavigation();
+                        echo "<br>";
+                        echo $GenericEasyPagination->getCurrentPages();
+                      ?></center></div>
                                     <?php }else{
                   echo "<div class='alert alert-danger alert-dismissible' role='alert'>
                                 <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
@@ -292,32 +307,7 @@
        
         <!-- Data Table -->
          <!-- Data Table -->
-        <script type="text/javascript">
-            $(document).ready(function(){
-                
-                
-                //Command Buttons
-                $("#data-table-command").bootgrid({
-                    css: {
-                        icon: 'md icon',
-                        iconColumns: 'md-view-module',
-                        iconDown: 'md-expand-more',
-                        iconRefresh: 'md-refresh',
-                        iconUp: 'md-expand-less'
-                    },
-                     caseSensitive: false,
-					  formatters: {
-						"link": function(column, row)
-						{
-							 var cellValue = row["Class"]+"&&subject="+row["Subject"];
-							return "<a     href=\"list.php?class="+cellValue+"  \"> <span class=\"md md-edit\"></span>   </a>";
-						}
-						 }
-					 
-
-                });
-            });
-        </script>
+         
         <?php $app->exportScript() ?>
     </body>
   

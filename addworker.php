@@ -14,28 +14,30 @@
      $_SESSION[emp_number]="AGM".date("Y").$row->ID  ; 
        $teacher1=new classes\Teacher();  $teacher=$teacher1->getTeacher_ID($_SESSION[ID]);
        $staff_=$teacher1->getUser($_SESSION[staff]);
-   if($_POST['insertpic']){	
+   if ($_POST['photo']) {
 
- 
-if (!$_FILES["files"]["name"])  {echo " <font color='red' style='text-decoration:blink'>Please choose a file to upload</font>"; $error=1;}
-  //check if file type is jpeg 
-  //elseif ($_FILES["files"]["type"]!="image/jpeg" and $_FILES["file"]["type"]!="image/pjpeg"  ){echo " <font color='red' style='text-decoration:blink'>Only jpeg formats accepted </font>";   		$error=2;  }
- 		elseif (($_FILES["files"]["size"] )>25000000) {echo "Only pictures of size less than 250 kb accepted"; $error=3;  }
 
-	 
-	 
-	 if($error>0){} else{
-	 $destination="workerPics/$_POST[no].jpg";
-     move_uploaded_file($_FILES["files"]["tmp_name"],
-     $destination);
-     if (move_uploaded_file) {echo "<script type='text/javascript'> alert( 'Picture uploaded  successfully ')</script>" ;
-	header("location:addworker.php?page=$_POST[no]");
-     
-     } 
-    		 
-}	 
-					
-					
+    if (!$_FILES["files"]["name"]) {
+        echo "<script type='text/javascript'> alert( 'Please upload a picture ')</script>";
+        ;
+        $error = 1;
+    } elseif (($_FILES["files"]["size"] ) > 400000) {
+        echo "<script type='text/javascript'> alert( 'Maximum picture size is 400kb ')</script>";
+        ;
+        $error = 3;
+    }
+
+
+
+    if ($error > 0) {
+        
+    } else {
+        $destination = "workerPics/$_POST[no].jpg";
+        move_uploaded_file($_FILES["files"]["tmp_name"], $destination);
+        if (move_uploaded_file) {
+            header("location:addworker.php?success=$_POST[no]");
+        }
+    }
 }
 if(isset($_GET["new"])){
      $_SESSION[id]="";
@@ -142,7 +144,7 @@ if(isset($_GET["del"])){
       }
      
  }
-    $help=new classes\helpers();
+     
     $notify=new classes\Notifications();
      $app->gethead();
  ?>
@@ -196,10 +198,10 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                         
                         <div class="card-body card-padding">
                             <?php
-                            if($_GET[update] ||    $_GET["success"] || $_GET[add] || $_GET[page]){
-                                    $staff=    $_SESSION[emp_number];
+                            if(isset($_GET[update]) || isset($_GET["success"]) || isset($_GET[add]) || isset($_GET[page])){
+                                    $staff=  $_GET["success"];
                                      $query=$sql->Prepare("SELECT * FROM tbl_workers WHERE   emp_number='$staff'  ") ;
-                   
+                                     print_r($query);
                                       $stmt=$sql->Execute($query);
                                       $rows=$stmt->FetchNextObject();
                                    }
@@ -585,7 +587,7 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                                             <input type="hidden" readonly required=""name="no" value="<?php  if(!empty($rows->EMP_NUMBER)){echo $rows->EMP_NUMBER; }else{echo $_SESSION[emp_number];} ?>" class="form-control input-sm" id="input"     >
                                             <div>&nbsp;&nbsp;</div>
                                             <div class="row"><center>
-                                                <input  id="proceed" type="submit"  name="submit" value="Save Actvity" class="btn btn-primary btn-large">
+                                                <input  id="proceed" type="submit"  name="submit" value="Save" class="btn btn-primary btn-large">
                                                 <input  id="proceed" type="reset"  name="Clear" value="Clear" class="btn btn-default-bright btn-large">
                                                 
                                             </center></div>
@@ -601,41 +603,39 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                                          
                                         <form action="" method="POST" enctype="multipart/form-data">
                                                       <input type="hidden" readonly required=""name="no" value="<?php  if(!empty($rows->EMP_NUMBER)){echo $rows->EMP_NUMBER; }else{echo $_SESSION[emp_number];} ?>" class="form-control input-sm" id="input"     >
+                                                     <center><p class="text-warning">Only jpeg with maximum size 400kb accepted</p></center>
                                                      
-                                                      <table style="margin-left:35%"width="237" border="1" bordercolor="#D3E5FA">
-                                                        <tr>
-                                                            <td width="202"  height="191" bgcolor="#EED9BF"><div align="center"><img <?php  echo $help->picture("workerPics/$rows->EMP_NUMBER.jpg",191)?>  src="<?php echo file_exists("workerPics/$rows->EMP_NUMBER.jpg") ? "workerPics/$rows->EMP_NUMBER.jpg":"img/user.jpg";?>" alt=" Picture of Student Here" data-toggle="modal" href="#modalWider"  /></div></td>
-                                                        </tr>
-                                                        <tr>
-                                                          <td  bgcolor="#C88433" ><p align="center">
-                                                               <?php    if($_SESSION['level']=="Administrator" ){?>
-                                                                                <input name="files"   type="file" id="files" size="5" <?php  if($_SESSION[emp_number]!=""){} else {echo 'disabled="disabled"';} ?> />
-                                                                                <input type="submit" name="insertpic" <?php  if($_SESSION[emp_number]!=""){} else {echo 'disabled="disabled"';} ?> id="insertpic" value="Upload" /><?php } ?>
-                                                                                 
-                                                          </p></td>
-                                                        </tr>
-                                                       <!-- <tr>
-                                                          <td  bgcolor="#8A6530" ><?php if($_SESSION['level']=="Administrator" ){?><img data-toggle="modal" href="#modalWider" src="img/images.jpg" width="60" height="38" alt="dfd" /><?php } ?></td>
-                                                        </tr> -->
+                                            <center>
+                                            <div class="fileinput fileinput-new" data-provides="fileinput" align="center">
+                                                <div class="fileinput-new thumbnail" style="width: 200px; height: 186px;">
+                                                    <img <?php  echo $help->picture("workerPics/$rows->EMP_NUMBER.jpg",191)?>  src="<?php echo file_exists("workerPics/$rows->EMP_NUMBER.jpg") ? "workerPics/$rows->EMP_NUMBER.jpg":"img/user.jpg";?>" alt=" Picture of Staff Here" data-toggle="modal" href="#modalWider"  />
+                                                </div>
+                                                <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;">
+                                                </div>
+                                                <div>
+                                                    <span class="btn default btn-file">
+                                                        <span class="fileinput-new">
+                                                            Select image </span>
+                                                        <span class="fileinput-exists btn btn-warning">
+                                                            Change </span>
+                                                        <input name="files"   type="file" id="files" required="" <?php  if($_SESSION[emp_number]!=""){} else {echo 'disabled="disabled"';} ?> />
+                                                                            
                                                         
-                                                     
-                                                     
-                                       
-                                                 
-                                             </form>
-                                        <tr><td>
-                                         <center>  <div class="form-group">
-                                              <br/>
-                                              
-                                              <div class="col-sm-offset-2 col-sm-2">
-                                            <a  style="margin-left:25%"href="addworker.php?new" class="btn btn-primary btn-sm">Add New worker</a>
-                                                  </div></div> 
+                                                    </span>
+                                                    <a href="javascript:;" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">
+                                                        Remove </a>
+
+                                                </div>
+
+                                                <br/>
+                                                <input type="submit" name="photo" <?php  if($_SESSION[emp_number]!=""){} else {echo 'disabled="disabled"';} ?> id="photo" value="Upload" class="btn btn-primary" /> 
+
+
+                                            </div>
+                     
+                                        </form>
                                          
-                                         </center></td></tr>
-                                             
-                                  </table>
-                                         
-                            </div>
+                                     </div>
                                      
                                     <div class="tab-pane animated fadeIn " id="tab4">    
                                         <center> 
@@ -745,54 +745,7 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
       
   <script src="vendors/bootgrid/jquery.bootgrid.min.js"></script>
         <script src="js/waves/waves.min.js"></script>
-        <!-- Data Table -->
-         <!-- Data Table -->
-        <script type="text/javascript">
-            $(document).ready(function(){
-                //Basic Example
-                $("#data-table-basic").bootgrid({
-                    css: {
-                        icon: 'md icon',
-                        iconColumns: 'md-view-module',
-                        iconDown: 'md-expand-more',
-                        iconRefresh: 'md-refresh',
-                        iconUp: 'md-expand-less'
-                    },
-                });
-                
-                //Selection
-                $("#data-table-selection").bootgrid({
-                    css: {
-                        icon: 'md icon',
-                        iconColumns: 'md-view-module',
-                        iconDown: 'md-expand-more',
-                        iconRefresh: 'md-refresh',
-                        iconUp: 'md-expand-less'
-                    },
-                    selection: true,
-                    multiSelect: true,
-                    rowSelect: true,
-                    keepSelection: true
-                });
-                
-                //Command Buttons
-                $("#data-table-command").bootgrid({
-                    css: {
-                        icon: 'md icon',
-                        iconColumns: 'md-view-module',
-                        iconDown: 'md-expand-more',
-                        iconRefresh: 'md-refresh',
-                        iconUp: 'md-expand-less'
-                    },
-                    formatters: {
-                        "commands": function(column, row) {
-                            return "<button type=\"button\" class=\"btn btn-icon command-edit\" data-row-id=\"" + row.id + "\"><span class=\"md md-edit\"></span></button> " + 
-                                "<button type=\"button\" class=\"btn btn-icon command-delete\" data-row-id=\"" + row.id + "\"><span class=\"md md-delete\"></span></button>";
-                        }
-                    }
-                });
-            });
-        </script>
+         
        <script src="vendors/bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
         <script src="vendors/summernote/summernote.min.js"></script>
         <script src="vendors/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>

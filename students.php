@@ -20,7 +20,7 @@ if(isset($_POST[sms])){
         if($a=$sms->sendAdmitted($arrayphone, $_POST[message],$stmt[INDEXNO])){
             $_SESSION[last_query]="";
         
-            header("location:students?success=1");
+            header("location:students.php?success=1");
             
             }
         }
@@ -52,38 +52,7 @@ if(isset($_POST[sms])){
         $_SESSION['class']=$_GET['class'];
         }
 
-        // mount course
-        
-         if(isset($_POST[sync])){
-             if($help->ping("www.google.com",80,20)){
-             $string=$sql->Prepare($_SESSION[last_query]);
-             $row2=$sql->Execute($string);
-                                    
-                while($row=$row2->FetchRow()){
-                     set_time_limit(500);
-                    $course_name= $row[COURSE_NAME] ;$course_code=$row[COURSE_CODE];$credit=$row[COURSE_CREDIT];$class=$row[COURSE_LEVEL];
-                    $semester=$row[COURSE_SEMESTER];$year=$row[COURSE_YEAR];$program=$row[PROGRAMME];$lecturer=$row[LECTURER];$type=$row[COURSE_TYPE];
-
-                     $ins=" COURSE_NAME='$course_name', COURSE_CODE='$course_code',  COURSE_CREDIT='$credit', COURSE_LEVEL='$class', COURSE_SEMESTER='$semester', COURSE_YEAR='$year', COURSE_TYPE='$type', PROGRAMME='$program', LECTURER='$lecturer'";
-                      
-                    $post = array('type'=>'mounted_courses','data'=>$ins,'user'=>$_POST['headings'],'pass'=>$_POST['footing']);
-                    $result=$help->sync_to_online($url, $post);
-                    if($result ){  
-	
-                   $query=$sql->Prepare("UPDATE tpoly_mounted_courses SET SYNC='1'  where ID='$row[ID]'");
-                    if($sql->Execute($query)){
-                        header("location:view_mounted_courses?success");
-                    }
-                       
-	 
-                    }
-                }
-                       
-             }
-             else{
-                   header("location:view_mounted_courses?no_internet");
-             }
-         }
+         
 
 
 $app=new classes\structure();
@@ -96,6 +65,10 @@ $app=new classes\structure();
  <script src="js/jquery_003.js"></script>
   
  <style>
+     #assesment  tr:hover{
+        
+        background-color: #FFFCBE;
+    }
      .container {
     width: 1351px;
 }
@@ -107,7 +80,38 @@ td{
  
  
 <body>
-      
+      <div class="modal fade" id="sms" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Send SMS</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            
+                                            <form action="students.php" method="POST" class="form-horizontal" role="form" enctype="multipart/form-data">
+                                                 <div class="card-body card-padding">
+                                                     <div class="form-group">
+                                                         <label for="inputPassworsd3" class="col-sm-2 control-label">Message</label>
+                                                         <div class="col-sm-10">
+
+                                                             <div class="fg-line">
+                                                                  
+                                                                 <textarea required="" class="form-control" name="message" rows="9" ></textarea>                                    
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                <div class="modal-footer">
+                                                      
+                                                    <button type="submit" name="sms" class="btn btn-success">Send <i class="fa fa-sm"></i></button>
+                                                          <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+                                                </div>
+                                                  
+                                                 </div>
+                                             </div>  
+                                            </form>
+                                  </div>
+                                </div>
+                        </div>
      <?php  $app->getTopRgion() ?>
         
         <section id="main">
@@ -132,20 +136,20 @@ td{
 							Generate customised reports   send sms,edit students data here
                             </p>
                             <div style="margin-top:-3%;float:right">
-                                <button class="btn bgm-orange waves-effect" title="send sms to parents of students">SMS<i class="md md-sms"></i></button>
+                                 <button      class="btn bgm-lime waves-effect"  data-target="#sms"  data-toggle="modal">Send SMS<i class="md md-sms"></i></button> 
                                 <a href="addStudent.php" title="add a student" class="btn bgm-orange waves-effect"> Add Student<i class="md md-add"></i></a>
                                  <button   class="btn btn-primary waves-effect waves-button dropdown-toggle" data-toggle="dropdown">Export Data<i class="md md-save"></i> </button>
                                         <ul class="dropdown-menu">
                                             
-                                            <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'csv',escape:'false'});"><img src='img/icons/csv.png' width="24"/> CSV</a></li>
-                                            <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'txt',escape:'false'});"><img src='img/icons/txt.png' width="24"/> TXT</a></li>
+                                            <li><a href="#" onClick ="$('#assesment').tableExport({type:'csv',escape:'false'});"><img src='img/icons/csv.png' width="24"/> CSV</a></li>
+                                            <li><a href="#" onClick ="$('#assesment').tableExport({type:'txt',escape:'false'});"><img src='img/icons/txt.png' width="24"/> TXT</a></li>
                                             <li class="divider"></li>
-                                            <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'excel',escape:'false'});"><img src='img/icons/xls.png' width="24"/> XLS</a></li>
-                                            <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'doc',escape:'false'});"><img src='img/icons/word.png' width="24"/> Word</a></li>
-                                            <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'powerpoint',escape:'false'});"><img src='img/icons/ppt.png' width="24"/> PowerPoint</a></li>
+                                            <li><a href="#" onClick ="$('#assesment').tableExport({type:'excel',escape:'false'});"><img src='img/icons/xls.png' width="24"/> XLS</a></li>
+                                            <li><a href="#" onClick ="$('#assesment').tableExport({type:'doc',escape:'false'});"><img src='img/icons/word.png' width="24"/> Word</a></li>
+                                            <li><a href="#" onClick ="$('#assesment').tableExport({type:'powerpoint',escape:'false'});"><img src='img/icons/ppt.png' width="24"/> PowerPoint</a></li>
                                             <li class="divider"></li>
-                                            <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'png',escape:'false'});"><img src='img/icons/png.png' width="24"/> PNG</a></li>
-                                            <li><a href="#" onClick ="$('#data-table-command').tableExport({type:'pdf',escape:'false'});"><img src='img/icons/pdf.png' width="24"/> PDF</a></li>
+                                            <li><a href="#" onClick ="$('#assesment').tableExport({type:'png',escape:'false'});"><img src='img/icons/png.png' width="24"/> PNG</a></li>
+                                            <li><a href="#" onClick ="$('#assesment').tableExport({type:'pdf',escape:'false'});"><img src='img/icons/pdf.png' width="24"/> PDF</a></li>
                                         </ul>
                             </div>
                         </div>
@@ -262,11 +266,11 @@ td{
                                          <option value=''>Filter by status</option>
                                         <option value='All status'>All status</option>
                                          <option value='In School'<?php if($_SESSION[status]=='In School'){echo 'selected="selected"'; }?>>In School</option>
-                                        <option value='1'<?php if($_SESSION[status]=='1'){echo 'selected="selected"'; }?>>Alumni</option>
-                                        <option value='2'<?php if($_SESSION[status]=='2'){echo 'selected="selected"'; }?>>Deffered</option>
-                                        <option value='3'<?php if($_SESSION[status]=='3'){echo 'selected="selected"'; }?>>Dead</option>
-                                        <option value='4'<?php if($_SESSION[status]=='4'){echo 'selected="selected"'; }?>>Suspended</option>
-                                        <option value='5'<?php if($_SESSION[status]=='5'){echo 'selected="selected"'; }?>>Rasticated</option>
+                                        <option value='Alumni'<?php if($_SESSION[status]=='Alumni'){echo 'selected="selected"'; }?>>Alumni</option>
+                                        <option value='Deffered'<?php if($_SESSION[status]=='Deffered'){echo 'selected="selected"'; }?>>Deffered</option>
+                                        <option value='Dead'<?php if($_SESSION[status]=='Dead'){echo 'selected="selected"'; }?>>Dead</option>
+                                        <option value='Suspended'<?php if($_SESSION[status]=='Suspended'){echo 'selected="selected"'; }?>>Suspended</option>
+                                        <option value='Rasticated'<?php if($_SESSION[status]=='Rasticated'){echo 'selected="selected"'; }?>>Rasticated</option>
 
                                     </select>
 
@@ -334,12 +338,12 @@ td{
                                                 if($house=="All houses" or $house=="" ){ $house=""; }else {$house_=" and HOUSE = '$house' "  ;}
                                        
                                                 if($status=="All status" or $status=="" ){ $status=""; }else {$status_=" and STATUS = '$status' "  ;}
-                                                if($search=="" ){ $search=""; }else {$search_="AND $content LIKE '%$search%' "  ;}
+                                                if($search=="" ){ $search=""; }else {$search_="AND $content= '$search' "  ;}
 
                                               $_SESSION[last_query]=     $query =$sql->Prepare( "SELECT * FROM tbl_student WHERE 1 $program_  $class_  $search_ $gender_ $house_ $status_ $year_ ");
                                                    
-                                              print_r($_SESSION[last_query]);
-                                              $rs = $sql->PageExecute($query,RECORDS_BY_PAGE,CURRENT_PAGE);
+                                           
+                                              $rs = $sql->PageExecute($_SESSION[last_query],RECORDS_BY_PAGE,CURRENT_PAGE);
                                                       $recordsFound = $rs->_maxRecordCount;    // total record found
                                                      if (!$rs->EOF) 
                                                      {
@@ -348,14 +352,16 @@ td{
              ?>
             <p style="color:green"><center>Total records = <?php echo $total; ?></center></p>
                     
-           <table id="data-table-command" class="table table-condensed table-vmiddle table-hover" >
-                            <thead bgcolor="#91B7D8">
+           <table id="assesment"  class="table table-condensed table-vmiddle" >
+               <thead>
                                 <tr>
                                     <th  data-column-id="kk" data-type="numeric">No</th>
                                      <th  data-column-id="link" data-formatter="link">Pic</th>
-                                    <th data-column-id="indexno">Index No</th>
+                                    <th data-column-id="indexno">School No</th>
+                                    <th data-column-id="indexno">WAEC IndexNo</th>
                                     <th data-column-id="surname" data-order="asc">Name</th>
                                      <th data-column-id="gender"  >Gender</th>
+                                     <th data-column-id="gender"  >Age</th>
                                     <th data-column-id="phone" >Subject Combination</th>
                                     <th data-column-id="class"  >Class</th>
                                     
@@ -379,12 +385,14 @@ td{
                                        ?>
                                       <tr>
                                     <td><?php  echo $count; ?></td>
-                                    <td style="width:90px"><a href="addStudent.php?indexno=<?php echo $rt[INDEXNO] ?>"><img <?php echo $help->picture("studentPhotos/$rt[INDEXNO].jpg",90)  ?>     src="<?php echo file_exists("studentPhotos/$rt[INDEXNO].jpg") ? "studentPhotos/$rt[INDEXNO].jpg":"studentPhotos/user.jpg";?>" alt=" Picture of Student Here"    /></a></td>
+                                    <td style="width:90px"><a href="addStudent.php?indexno=<?php echo $rt[INDEXNO] ?>"><img <?php echo $help->picture("studentPhotos/$rt[INDEXNO].jpg",90)  ?>     src="<?php echo file_exists("studentPhotos/$rt[INDEXNO].jpg") ? "studentPhotos/$rt[INDEXNO].jpg":"studentPhotos/user.png";?>" alt=" Picture of Student Here"    /></a></td>
                                  
                                     <td><?php  echo $rt[INDEXNO]; ?></td>
+                                     <td><?php  echo $rt[WAEC_INDEXNO]; ?></td>
                                     <td><?php  echo $rt[SURNAME].",".$rt[OTHERNAMES] ?></td>
                                      
                                     <td><?php  echo $rt[GENDER]; ?></td>
+                                    <td><?php  echo $rt[AGE]; ?>yrs</td>
                                     <td><?php  echo $rt[SUBJECT_COMBINATIONS]; ?></td>
                                      <td><?php  echo $rt["CLASS"]; ?></td>
                                     <td><?php  echo $rt[GUARDIAN_NAME]; ?></td>
@@ -396,7 +404,7 @@ td{
                                     <td><?php  echo $rt[STATUS]; ?></td>
                                     <td>
                                         <a     href="addStudent.php?indexno=<?php  echo $rt[INDEXNO]?>" title="click to edit" tooltip="click to edit"> <span class="md md-edit"></span>   </a> 
-                                        <a  onclick="return MM_openBrWindow('transcript.php?indexno=<?php  echo $rt[INDEXNO]?>','','menubar=yes,width=800,height=650')" title="click to print transcript" tooltip="click to print transcript"> <span class="md-print " style="font:90px"></span>   </a> 
+                                        <a  onclick="return MM_openBrWindow('report_card.php?student=<?php  echo $rt[ID]?>','','menubar=yes,width=800,height=650')" title="click to print report card" tooltip="click to print transcript"> <span class="md-print " style="font:90px"></span>   </a> 
                                         <a  onclick="return MM_openBrWindow('printStudent.php?indexno=<?php  echo $rt[INDEXNO]?>','','menubar=yes,width=800,height=650')"     title="click to view" tooltip="click to view"> <span class="md-pageview "></span>   </a> 
                                     </td>  
                                 
