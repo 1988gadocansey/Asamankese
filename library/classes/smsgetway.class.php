@@ -89,7 +89,7 @@ class smsgetway{
                  }
             // admitted sms
             public function sendAdmitted($phone,$message,$applicant){
-                $year=(date('Y')-1)."/".date('Y');
+                $year=(date('Y')-1)."/". date('Y');
             $phone="+233".\substr($phone,1,9);
             $url = 'http://txtconnect.co/api/send/'; 
             $fields = array( 

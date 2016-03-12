@@ -119,7 +119,7 @@
             <?php 
 		  
 		  
-		$stmt=$sql->Prepare("select * from tbl_assesments,tbl_courses,tbl_subjects where tbl_assesments.stuId='$_GET[student]' and tbl_assesments.year='$school->YEAR' and tbl_assesments.term='$school->TERM' and tbl_assesments.courseId=tbl_courses.id and tbl_subjects.type='core' and tbl_subjects.name=tbl_courses.name");
+		$stmt=$sql->Prepare("select * from tbl_assesments,tbl_courses,tbl_subjects where tbl_assesments.stuId='$_GET[student]' and tbl_assesments.year='$school->YEAR' and tbl_assesments.term='$school->TERM' and tbl_assesments.courseId=tbl_courses.id and tbl_subjects.name=tbl_courses.name order by tbl_subjects.type ASC,tbl_subjects.name ASC");
 		 
                 $stmt=$sql->Execute($stmt);
                 $t=$stmt->RecordCount();
@@ -129,9 +129,9 @@
                 {
 
                 ?>
-          <tr bordercolor="#AED7FF"  bgcolor="<?php echo (((++$AltColors1) % 2) == 0) ? "#F7F0DB" : "#FFFFFF"; ?>"  >
+          <tr    >
             <td height="43" nowrap='nowrap' ><div align="left"><?php echo $r[name]; ?></div></td>
-              <td ><div align="center"><?php echo ($r[test1]+$r[test2]+$r[test3]+$r[test4]) ;?></div></td>
+              <td ><div align="center"><?php echo ($r[test1]+$r[test2]+$r[test3]+$r[test4])*0.3 ;?></div></td>
               <td ><div align="center"><?php echo $r[exam];?></div></td>
               <td ><div align="center"><?php echo $r[total]; $ttotal+=$r[total]; if($r['total']>0){ $cout=$cout+100;}?></div></td>
               <td width="81" >

@@ -29,6 +29,13 @@ class helpers {
         return $data->INDEXNO;
          
      }
+     public function getID($indexno){
+        $query=$this->connect->Prepare("SELECT ID FROM tbl_student WHERE INDEXNO='$indexno'");
+        $query2=$this->connect->Execute($query);
+        $data=$query2->FetchNextObject();
+        return $data->ID;
+         
+     }
 	   
     public function getIndexNo($program){
          $query=$this->connect->Prepare("SELECT CODE FROM tbl_program WHERE NAME='$program'");

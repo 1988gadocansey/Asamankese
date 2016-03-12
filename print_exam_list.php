@@ -53,7 +53,7 @@
                         
                         <div class="card-header">
                            <p>
-							WAEC LIST
+							Report Card printing
                             </p>
                           
                         </div>
@@ -61,7 +61,7 @@
                             <table align="center">
                                 <tr>
                                     <td style=" ">
-                            <select style="width:290px " class="form-control"    data-placeholder="search class by typing"  name="students" onchange="document.location.href='waec_printout.php?class='+escape(this.value);">
+                            <select style="width:290px " class="form-control"    data-placeholder="search class by typing"  name="students" onchange="document.location.href='exam_list.php?class='+escape(this.value);">
                                                          <option value=''>search class by typing  </option>
                                                            
                                                                 <?php 

@@ -239,14 +239,17 @@ td{
                                          <option value=''>Filter by year group</option>
                                           <option value='All year'>All year groups</option>
                                                   <?php
-                                                                                                               for($i=2008; $i<=4000; $i++){
-                                                                                                                       $a=$i - 1 ."/". $i;?>
-                                                                                                                                <option <?php if($_SESSION[year]==$a){echo 'selected="selected"'; }?>value='<?php echo $a ?>'><?php echo $a ?></option>";
+                                          for ($i = 2008; $i <= 4000; $i++) {
+                                              $a = $i - 1 . "/" . $i;
+                                              ?>
+                                              <option <?php if ($_SESSION[year] == $a) {
+                                              echo 'selected="selected"';
+                                          } ?>value='<?php echo $a ?>'><?php echo $a ?></option>";
 
-                                                                                                                    <?php    } ?>
+                                          <?php } ?>
 
 
-                                                                                                        ?>
+                                          ?>
                                     </select>
 
                      </td>

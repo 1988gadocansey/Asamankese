@@ -13,11 +13,11 @@ ini_set('display_errors',0);
      $help=new classes\helpers();
      $notify=new classes\Notifications();
 
-$query=$sql->Prepare("SELECT tbl_grades.id as id,total,posInSubject ,tbl_student.indexno as stid,tbl_student.surname as surname,tbl_student.othernames as othernames,quiz1,quiz2,quiz3,exam,comments,posInSubject from tbl_student,tbl_grades,tbl_courses where tbl_grades.year='$school->YEAR' and tbl_grades.term='$school->TERM' and tbl_grades.stuId=tbl_student.indexno and tbl_grades.courseId=tbl_courses.id and tbl_courses.classId='$_GET[form]' and tbl_courses.name='$_GET[course]'");		
-$query=$query." ORDER BY tbl_student.surname asc,tbl_student.othernames asc";
+$query=$sql->Prepare("SELECT tbl_assesments.id as id,total,posInSubject ,tbl_student.indexno as stid,tbl_student.surname as surname,tbl_student.othernames as othernames,quiz1,quiz2,quiz3,exam,comments,posInSubject from tbl_student,tbl_assesments,tbl_courses where tbl_assesments.year='$school->YEAR' and tbl_assesments.term='$school->TERM' and tbl_assesments.stuId=tbl_student.indexno and tbl_assesments.courseId=tbl_courses.id and tbl_courses.classId='$_GET[form]' and tbl_courses.name='$_GET[course]'");		
+$query1=$query." ORDER BY tbl_student.surname asc,tbl_student.othernames asc";
   
 $count=1;
-$stmt=$sql->Execute($query);
+$stmt=$sql->Execute($query1);
 $array['header'][0]="No.";
 $array['header'][1]="IndexNo";
 $array['header'][2]="Name";
@@ -25,7 +25,7 @@ $array['header'][3]="Quiz1";
 $array['header'][4]="Quiz2";
 $array['header'][5]="Quiz3";
 $array['header'][6]="Exam";
-while($row=$stmt->FetchRow($query)){
+while($row=$stmt->FetchRow()){
 	$array["$row[stid]"][0]=$count++;
 	$array["$row[stid]"][1]=$row['stid'];
 	$array["$row[stid]"][2]="$row[surname],$row[othernames]" ;

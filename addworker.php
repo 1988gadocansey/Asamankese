@@ -77,7 +77,8 @@ if(isset($_GET[add])==1){
      // then update
      else{
           $query=$sql->Prepare("UPDATE tbl_workers SET   Name='$_POST[othernames]', surname='$_POST[surname]',placeofresidence='$_POST[residence]',address='$_POST[address]', phone='$_POST[phone]',  dob='$dob' ,sex='$_POST[gender]',marital='$_POST[marital]',hometown='$_POST[hometown]',mother='$_POST[mother]' , father='$_POST[father]',dependentsNo='$_POST[dependents]',title='$_POST[title]',email='$_POST[email]' WHERE emp_number='$_POST[no]' ");
-
+          print_r($query);
+          echo "update";
            if( $query=$sql->Execute( $query)){
               $_SESSION[emp_number]=$_POST[no];
                print $sql->ErrorMsg();
@@ -243,7 +244,8 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                                                 <label for="input" class="col-sm-2 control-label">Employee Number</label>
                                                 <div class="col-sm-2">
                                                     <div class="fg-line">
-                                                        <input type="text" readonly required=""name="no" value="<?php  if(!empty($rows->EMP_NUMBER)){echo $rows->EMP_NUMBER; }else{echo $_SESSION[emp_number];} ?>" class="form-control input-sm" id="input"     >
+                                                         
+                                                    <input type="text" readonly required=""name="no" value="<?php  if(!empty($rows->EMP_NUMBER)){echo $rows->EMP_NUMBER; }else{echo $_SESSION[emp_number];} ?>" class="form-control input-sm" id="input"     >
                                                     </div>
                                                 </div>
                                             </div>
@@ -379,10 +381,10 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                                                 </div>
                                             </div>
                                            
-                                            <input type="hidden" name="id" value="<?php echo $rows->ID  ?>"/>
+                                            <input type="hidden" name="id" value="<?php echo $rows->IDS  ?>"/>
                                             <div>&nbsp;&nbsp;</div>
                                             <div class="row"><center>
-                                                <input  id="proceed" type="submit"  name="submit" value="Save Actvity" class="btn btn-primary btn-large">
+                                                <input  id="proceed" type="submit"  name="submit" value="Save" class="btn btn-primary btn-large">
                                                 <input  id="proceed" type="reset"  name="Clear" value="Clear" class="btn btn-default-bright btn-large">
                                                 
                                             </center></div>

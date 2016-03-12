@@ -75,8 +75,8 @@ while ($rt = $output->FetchRow()) {
             if  ($exe->RecordCount() > 0) {
                 
             } else {
-                $query22 = $sql->Prepare("insert into tbl_assesments(courseId,stuId,class,year,term) values(" . $sql->Param('a') . ")," . $sql->Param('b') . "," . $sql->Param('c') . "," . $sql->Param('d') . "," . $sql->Param('e') . "   ");
-                $sql->Execute($query22, array($row[ID], $rt[ID], $rt['CLASS'], $year, $term));
+                $query22 = $sql->Prepare("insert into tbl_assesments(courseId,stuId,class,year,term) values( '$row[ID]', '$rt[ID]', '$rt[CLASS]', '$year', '$term' ");
+                $sql->Execute($query22);
             }
         }
     }

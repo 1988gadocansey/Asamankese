@@ -57,11 +57,11 @@
                             </p>
                           
                         </div>
-                        <div>
+                        <div align="center">
                             <table align="center">
                                 <tr>
-                                    <td style="width:30%">
-                            <select style=" "     data-placeholder="search student by typing his indexno"  name="students" onchange="document.location.href='report_card.php?student='+escape(this.value);">
+                                    <td style=" ">
+                            <select style="margin-left: 34px"     data-placeholder="search student by typing his indexno"  name="students" onchange="document.location.href='report_card.php?student='+escape(this.value);">
                                                          <option value=''>search student by typing his indexno</option>
                                                            
                                                                 <?php 

@@ -248,7 +248,7 @@
                                     <th data-column-id="Term" style="text-align:center">Term</th>
                                     
                                     <th data-column-id="No of Students" data-order="asc" style="text-align:center ">No of Students</th>
-                                     <th  data-column-id="link" data-formatter="link">Actions</th>
+                                    <th  data-column-id="link" data-formatter="link" style="text-align: ">Actions</th>
                                     
                                 </tr>
                             </thead>
@@ -270,8 +270,9 @@
                                     <td style="text-align:center"><?php  echo $rt[term] ?></td>
                                     <td style="text-align:center"><?php  echo $student->getTotalStudent_by_Class($rt[classId],$school->YEAR,$school->TERM); ?></td>
                                      
-                                    <td><a     href="list.php?class=<?php echo $rt[classId] ?>&subject=<?php echo $rt[id] ?> " ><span class="md md-edit"></span>   </a></td>
-                                     </tr>
+                                    <td ><a     href="list.php?class=<?php echo $rt[classId] ?>&subject=<?php echo $rt[id] ?> " ><span class="md md-edit"></span>   </a> 
+                                     <a href="upload_result.php">Upload Marks</a></td> 
+                                    </tr>
                                     <?php } ?>
                             </tbody>
                           </table>  <br/>

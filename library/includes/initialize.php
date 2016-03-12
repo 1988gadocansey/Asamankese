@@ -6,10 +6,12 @@ ini_set('session.gc_maxlifetime', 1);
 ini_set('session.cookie_lifetime', 0);
 header('Content-Type: text/html; charset=utf-8');
 mb_internal_encoding('utf-8');
-ini_set('upload_max_filesize', '10M');
-ini_set('post_max_size', '10M');
-ini_set('max_input_time', 300);
-ini_set('max_execution_time', 300);
+ini_set('upload_max_filesize', '50M');
+ini_set('post_max_size', '50M');
+ini_set('max_input_time', 10000);
+ini_set('max_input_vars', 10000);
+ 
+ini_set('max_execution_time', 10000);
 
 if ($_GET["page"] != ""): $page = $_GET["page"];
 else: $page = 1;

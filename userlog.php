@@ -199,14 +199,14 @@
                    
                 $query= $sql->Prepare( "SELECT * FROM tbl_system_log ORDER BY INPUTEDDATE DESC");
                                                 
-                $stmt =$sql->Prepare($query);
-                $out=$sql->Execute($stmt);
-                $total=$out->RecordCount();
-                if($out->RecordCount()>0){
+                 $rs = $sql->PageExecute($query,RECORDS_BY_PAGE,CURRENT_PAGE);
+                                                      $recordsFound = $rs->_maxRecordCount;    // total record found
+                                                     if (!$rs->EOF) 
+                                                     {
              ?>
               
                     <div class="table-responsive">
-                        <table id="data-table-command" class="table table-bordered table-vmiddle table-hover"  >
+                        <table id="data-table-command" class="table table-striped table-vmiddle table-hover"  >
                             <thead>
                                 <tr>
                                     
@@ -226,7 +226,7 @@
                             <tbody>
                                 <?php
                                    $count=0;
-                                    while($rtmt=$out->FetchRow()){
+                                    while($rtmt=$rs->FetchRow()){
                                                             $count++;
                                                              						
                                        ?>
@@ -244,7 +244,19 @@
                                     </tr>
                                     <?php }?>
                             </tbody>
-                          </table></div>
+                          </table>
+                    
+                        <br/>
+                     <center><?php
+                     
+                         $GenericEasyPagination->setTotalRecords($recordsFound);
+	  
+                        echo $GenericEasyPagination->getNavigation();
+                        echo "<br>";
+                        echo $GenericEasyPagination->getCurrentPages();
+                      ?></center>
+                    </div>
+                            
                                     <?php }else{
                   echo "<div class='alert alert-danger alert-dismissible' role='alert'>
                                 <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
@@ -266,35 +278,7 @@
  <script src="vendors/bootgrid/jquery.bootgrid.min.js"></script>
        
           <script src="vendors/bootgrid/jquery.bootgrid.min.js"></script>
-       
-        <!-- Data Table -->
-         <!-- Data Table -->
-        <script type="text/javascript">
-            $(document).ready(function(){
-                
-                
-                //Command Buttons
-                $("#data-table-command").bootgrid({
-                    css: {
-                        icon: 'md icon',
-                        iconColumns: 'md-view-module',
-                        iconDown: 'md-expand-more',
-                        iconRefresh: 'md-refresh',
-                        iconUp: 'md-expand-less'
-                    },
-                     caseSensitive: false,
-                      formatters: {
-                            "link": function(column, row)
-                            {
-                                     var cellValue = row["Classl"]+"&&subject="+ row["Subject"];
-                                    return "<a     href=\"list.php?class="+cellValue+"  \"> <span class=\"md md-edit\"></span>   </a>";
-                            }
-                             }
-					 
-
-                });
-            });
-        </script>
+        
         <?php $app->exportScript() ?>
     </body>
   

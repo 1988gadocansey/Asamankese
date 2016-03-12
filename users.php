@@ -18,7 +18,7 @@
 	 	$stmt=$sql->Prepare("INSERT INTO  tbl_auth (USER,USER_SINCE,USER_TYPE,USERNAME,PASSWORD,NET_ADD) VALUES('$_POST[user]','$date','$_POST[designation]','$_POST[username]','$password','$_POST[ip]')");
                
                 if($sql->Execute($stmt)){
-                    header("location:users.php?success=1");
+                    header("location:logout.php?success=1");
                 }
      
 	 }
@@ -221,8 +221,14 @@ xmlhttp.send();
                     <tr>
 
                          <td>&nbsp;</td>
+                          <td>&nbsp;</td>
+                           <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                             <td>&nbsp;</td>
+                              <td>&nbsp;</td>
+                               <td>&nbsp;</td>
                 <td width="25%">
-                 <select class='form-control'  name='year'  style="margin-left:16%; width:55% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?designation='+escape(this.value);" >
+                 <select class='form-control'  name='year'  style="margin-left: 10px; width:55% " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?designation='+escape(this.value);" >
                             <option value=''>Filter job type</option>
                   	  <option value='all'>All</option>
                       <?php 
@@ -249,7 +255,7 @@ xmlhttp.send();
                       
                <td>&nbsp;</td>
                 <td width="25%">
-                <select class='form-control'  name='status'  style="margin-left:16%;  " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?status='+escape(this.value);" >
+                <select class='form-control'  name='status'  style="margin-left:12px;  " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?status='+escape(this.value);" >
                             <option value=''>Filter status</option>
                   	        <option <?php if($_SESSION[status]=='all'){echo 'selected="selected"'; }?>  value='all'>All</option>
                       		<option  <?php if($_SESSION[status]=='1'){echo 'selected="selected"'; }?> value='1'>Enabled</option>
@@ -294,9 +300,11 @@ xmlhttp.send();
 				  $_SESSION[last_query]=  $query= $sql->Prepare( "SELECT * FROM `tbl_auth` $type $status     ");
                                                 
 											 	$stmt =$sql->Prepare($query);
-                                                    $out=$sql->Execute($stmt);
-                                                    $total=$out->RecordCount();
-                                                    if($out->RecordCount()>0){
+                                                    
+                                                    $rs = $sql->PageExecute($_SESSION[last_query],RECORDS_BY_PAGE,CURRENT_PAGE);
+                                                      $recordsFound = $rs->_maxRecordCount;    // total record found
+                                                     if (!$rs->EOF) 
+                                                     {
              ?>
             <p style="color:green"><center>Filter by (<?php echo $end_query;?>) Total records = <?php echo $total; ?></center></p>
                     <div class="table-responsive">
@@ -304,10 +312,9 @@ xmlhttp.send();
                             <thead>
                                 <tr>
                                     <th data-column-id="kk" data-type="numeric">#</th>
-                                    <th data-column-id="USER" data-type=" ">WORKER</th>
+                                    
                                     <th data-column-id="USERNAME" data-type=" ">USERNAME</th>
-                                    <th style="text-align:center" data-type="string" data-column-id="USER POSITION" style="text-align:center">USER POSITION</th>
-                                    <th data-column-id="USER DESIGNATION">USER DESIGNATION</th>
+                                         <th data-column-id="USER DESIGNATION">USER DESIGNATION</th>
                                     <th data-column-id="USER SINCE" data-order="asc" style="text-align:center">USER SINCE</th>
                                      
                                      <th data-column-id="LOGIN CONFIGURATION" data-order="asc" style="text-align:center">LOGIN (IP ADD)</th>
@@ -322,17 +329,17 @@ xmlhttp.send();
                             <tbody>
                                 <?php
                                 $count=0;
-                                    while($rt=$out->FetchRow()){
+                                    while($rt=$rs->FetchRow()){
                                                             $count++;
                                        ?>
                                       <tr>
                                     <td><?php  echo $count; ?></td>
-                                     <td><?php  $teacher=new classes\Teacher(); $teacher=$teacher->getTeacher($rt[USER]);  echo $teacher->NAME." " .$teacher->SURNAME; ?></td>
+                                     
                                      <td><?php  echo $rt[USERNAME];$_SESSION[ID]=$rt[ID]; ?></td>
                                      
                                  
-                                    <td><?php  $teacher=new classes\Teacher(); $teacher=$teacher->getTeacher($rt[USER]);  echo $teacher->POSITION; ?></td>
-                                      <td style="text-align:center"><?php  echo $rt[USER_TYPE] ?></td>
+                   
+                                      <td style="text-align: "><?php  echo $rt[USER_TYPE] ?></td>
                                     <td style="text-align:center"><?php  echo date("d/m/Y",$rt[USER_SINCE] )?></td>
                                     <td style="text-align:center"><?php  echo $rt[NET_ADD] ?></td>
                                     <td style="text-align:center"><?php    if($rt[ACTIVE]==1){echo"Enabled";}else{echo "Disabled";} ?></td>
@@ -345,7 +352,14 @@ xmlhttp.send();
                                      </tr>
                                     <?php }  ?>
                             </tbody>
-            </table></div>
+            </table></div> <center><?php
+                     
+                         $GenericEasyPagination->setTotalRecords($recordsFound);
+	  
+                        echo $GenericEasyPagination->getNavigation();
+                        echo "<br>";
+                        echo $GenericEasyPagination->getCurrentPages();
+                      ?></center>
                                     <?php }else{
                   echo "<div class='alert alert-danger alert-dismissible' role='alert'>
                                 <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
@@ -376,27 +390,7 @@ xmlhttp.send();
         <script src="vendors/bootstrap-select/bootstrap-select.min.js"></script>
         <script src="vendors/chosen/chosen.jquery.min.js"></script>
 	 <script src="vendors/input-mask/input-mask.min.js"></script>
-  <script src="vendors/bootgrid/jquery.bootgrid.min.js"></script>
-       
-        <!-- Data Table -->
-         <!-- Data Table -->
-        <script type="text/javascript">
-            $(document).ready(function(){
-                
-                
-                //Command Buttons
-                $("#data-table-command").bootgrid({
-                    css: {
-                        icon: 'md icon',
-                        iconColumns: 'md-view-module',
-                        iconDown: 'md-expand-more',
-                        iconRefresh: 'md-refresh',
-                        iconUp: 'md-expand-less'
-                    }
-                     
-                });
-            });
-        </script>
+  
         <?php $app->exportScript() ?>
             <script type="text/javascript">
  var sprypassword2 = new Spry.Widget.ValidationPassword("sprypassword2", {validateOn:["blur"]});

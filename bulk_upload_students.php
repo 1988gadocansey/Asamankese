@@ -1,5 +1,5 @@
 <?php
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
     require 'vendor/autoload.php';
     include "library/includes/config.php";
      include "library/includes/initialize.php";

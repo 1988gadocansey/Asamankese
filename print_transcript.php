@@ -53,21 +53,21 @@
                         
                         <div class="card-header">
                            <p>
-							WAEC LIST
+				Transcript Request
                             </p>
                           
                         </div>
-                        <div>
+                        <div align="center">
                             <table align="center">
                                 <tr>
                                     <td style=" ">
-                            <select style="width:290px " class="form-control"    data-placeholder="search class by typing"  name="students" onchange="document.location.href='waec_printout.php?class='+escape(this.value);">
-                                                         <option value=''>search class by typing  </option>
+                            <select style="margin-left: 34px"     data-placeholder="search student by typing his indexno"  name="students" onchange="document.location.href='transcript.php?student='+escape(this.value);">
+                                                         <option value=''>search student by typing his indexno</option>
                                                            
                                                                 <?php 
                                                           global $sql;
                                                             
-                                                                $query2=$sql->Prepare("SELECT * FROM tbl_classes ");
+                                                                $query2=$sql->Prepare("SELECT * FROM tbl_student ");
 
 
                                                                 $query=$sql->Execute( $query2);
@@ -77,7 +77,7 @@
                                                                {
 
                                                                ?>
-                                                               <option value="<?php echo $row['name']; ?>"     >     <?php echo $row['name']?></option>
+                                                               <option value="<?php echo $row['ID']; ?>"     >     <?php echo $row['INDEXNO']." - ".$row['OTHERNAMES']; ?></option>
 
                              <?php }?>
                               </select>

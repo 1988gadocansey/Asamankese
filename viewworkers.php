@@ -9,6 +9,22 @@
     $help=new classes\helpers();
     $notify=new classes\Notifications();
      $app->gethead();
+     if(isset($_POST[sms])){
+         $q=$_SESSION[last_query];
+        $query=$sql->Prepare($q);
+        $rt=$sql->Execute($query);
+        
+        While($stmt=$rt->FetchRow()){
+            $arrayphone=$stmt[PHONE];
+        
+        if($a=$sms->sendAdmitted($arrayphone, $_POST[message],$stmt[INDEXNO])){
+            $_SESSION[last_query]="";
+        
+            header("location:viewworkers.php?success=1");
+            
+            }
+        }
+    }
  ?>
  <link href="vendors/bootgrid/jquery.bootgrid.min.css" rel="stylesheet">
  <script src="js/jquery.js"></script>
@@ -16,7 +32,7 @@
   
  <style>
      .container {
-    width: 1490px;
+    width: 1310px;
 }
  </style>
   
@@ -29,7 +45,38 @@
              <?php $app->getMenu(); ?>
             
               <?php $app->getChats(); ?>
-            
+               <div class="modal fade" id="sms" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Send SMS</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            
+                                            <form action="viewworkers.php" method="POST" class="form-horizontal" role="form" enctype="multipart/form-data">
+                                                 <div class="card-body card-padding">
+                                                     <div class="form-group">
+                                                         <label for="inputPassworsd3" class="col-sm-2 control-label">Message</label>
+                                                         <div class="col-sm-10">
+
+                                                             <div class="fg-line">
+                                                                  
+                                                                 <textarea required="" class="form-control" name="message" rows="9" ></textarea>                                    
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                <div class="modal-footer">
+                                                      
+                                                    <button type="submit" name="sms" class="btn btn-success">Send <i class="fa fa-sm"></i></button>
+                                                          <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+                                                </div>
+                                                  
+                                                 </div>
+                                             </div>  
+                                            </form>
+                                  </div>
+                                </div>
+                        </div>
             
           <section id="content">
                 <div class="container">
@@ -47,6 +94,8 @@
 							Generate customised reports   send sms,edit workers data here
                             </p>
                             <div style="margin-top:-3%;float:right">
+                                <button      class="btn bgm-lime waves-effect"  data-target="#sms"  data-toggle="modal">Send SMS<i class="md md-sms"></i></button> 
+                              
                                 <a href="addworker.php" class="btn bgm-orange waves-effect"> Add Worker<i class="md md-add"></i></a>
                                  <button   class="btn btn-primary waves-effect waves-button dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars"></i> Export Data</button>
                                         <ul class="dropdown-menu">
@@ -70,6 +119,11 @@
                     <tr>
 
                          <td>&nbsp;</td>
+                         <td>&nbsp;</td>
+                         <td>&nbsp;</td>
+                         <td>&nbsp;</td>
+                         <td>&nbsp;</td><td>&nbsp;</td>
+                         
                 <td width="25%">
                  <select class='form-control'   id='status' onChange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?class='+escape(this.value);"   style="margin-left:14%;Width:60%">
                  <option value=''>Filter by class</option>
@@ -316,9 +370,10 @@
                   }                             $_SESSION[last_query]=  $query= $sql->Prepare( "SELECT * FROM tbl_workers $end_query ");
                                                 
 												$stmt =$sql->Prepare($query);
-                                                    $out=$sql->Execute($stmt);
-                                                    $total=$out->RecordCount();
-                                                    if($out->RecordCount()>0){
+                                                    $rs = $sql->PageExecute($_SESSION[last_query],RECORDS_BY_PAGE,CURRENT_PAGE);
+                                                      $recordsFound = $rs->_maxRecordCount;    // total record found
+                                                     if (!$rs->EOF) {
+                                                    
              ?>
             <p style="color:green"><center>Filter by (<?php echo $end_query;?>) Total records = <?php echo $total; ?></center></p>
                     <div class="table-responsive">
@@ -355,12 +410,13 @@
                             <tbody>
                                 <?php
                                 $count=0;
-                                    while($rt=$out->FetchRow()){
+                                    while($rt=$rs->FetchRow()){
                                                             $count++;
                                        ?>
                                       <tr>
                                     <td><?php  echo $count; ?></td>
-                                    <td>  </td>
+                                    <td style="width:90px"><a href="addworker.php?staff=<?php echo $rt[emp_number] ?>"><img <?php echo $help->picture("workerPics/$rt[emp_number].jpg",90)  ?>     src="<?php echo file_exists("workerPics/$rt[emp_number].jpg") ? "workerPics/$rt[emp_number].jpg":"workerPics/user.png";?>" alt=" Picture of WORKER Here"    /></a></td>
+                                 
                                     <td><?php  echo $rt[emp_number]; ?></td>
                                     <td><?php  echo $rt[title]." ". $rt[surname]." ".$rt[Name] ?></td>
                                     <td><?php  echo  $rt[classes]; ?></td>
@@ -390,6 +446,14 @@
                                     <?php } ?>
                             </tbody>
             </table></div>
+                    <center><?php
+                     
+                         $GenericEasyPagination->setTotalRecords($recordsFound);
+	  
+                        echo $GenericEasyPagination->getNavigation();
+                        echo "<br>";
+                        echo $GenericEasyPagination->getCurrentPages();
+                      ?></center>
                                     <?php }else{
                   echo "<div class='alert alert-danger alert-dismissible' role='alert'>
                                 <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
@@ -411,34 +475,7 @@
         <script src="vendors/bootstrap-select/bootstrap-select.min.js"></script>
         <script src="vendors/chosen/chosen.jquery.min.js"></script>
 
-  <script src="vendors/bootgrid/jquery.bootgrid.min.js"></script>
-       
-        <script type="text/javascript">
-            $(document).ready(function(){
-                
-                
-                //Command Buttons
-                $("#data-table-command").bootgrid({
-                    css: {
-                        icon: 'md icon',
-                        iconColumns: 'md-view-module',
-                        iconDown: 'md-expand-more',
-                        iconRefresh: 'md-refresh',
-                        iconUp: 'md-expand-less'
-                    },
-                     caseSensitive: false,
-					  formatters: {
-						"link": function(column, row)
-						{
-							 var cellValue = row["staffId"];
-							return "<a href='addworker.php?staff="+cellValue+"'><img  src='workerPics/"+cellValue+".jpg' style='width:79px;height:67px'   alt=\"staff pic here\" /></a>";
-						}
-						  					}
-					 
-
-                });
-            });
-        </script>
+   
         <?php $app->exportScript() ?>
     </body>
   

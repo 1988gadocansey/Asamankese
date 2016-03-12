@@ -10,15 +10,17 @@
      $student=new classes\Student();
        		   
      $app=new classes\structure();
-     $help=new classes\helpers();
+      
      $notify=new classes\Notifications();
      $app->gethead();
      $teacher=new classes\Teacher();  $teacher=$teacher->getTeacher_ID($_SESSION[ID]);
 
      $session->set("CLASS",$_GET['class']);
      $session->set("SUBJECT",$_GET['subject']);
+    
      $grade=new classes\Grades();
       if(isset($_POST[submit])){
+           
           // for grade guild table -- it represents the values set for calculations
           // sets for each course in a term and in an academic year
                   $qu1=$_POST[test1];
@@ -29,7 +31,7 @@
             /// ////////////////////////////////////////////////////////////
              // grade table area //
             ////////////////////////////////////////////////////////////////
-           $count=$_POST[counter];
+           $count=$_POST[upper];
            $student_id=$_POST[stuid];
            $indexno=$_POST[indexno];
            $test1=$_POST[q1];
@@ -69,17 +71,17 @@
                         
                     }
                     
-                    $rtmt=$sql->Prepare("UPDATE tbl_assesments SET test1='$test1_',test2='$test2_',test3='$test3_',exam='$exam_',total='$total',comments='$comment_' , grade='$grade_value_' WHERE id='$student_id_'") ;
-                    print_r($rtmt);
+                    $rtmt=$sql->Prepare("UPDATE tbl_assesments SET test1='$test1_',test2='$test2_',test3='$test3_',exam='$exam_',total='$total',comments='$comment_' , grade='$grade_value_' ,entered_by='$_SESSION[ID]' WHERE id='$student_id_'") ;
+                    
                     $sql->Execute($rtmt);
-          
+           }
                     ////////////////////////////////////////////////////////////
                     // Starting position in subject
                     ////////////////////////////////////////////////////////////
                     
-                    $query1=$sql->Prepare("SELECT tbl_assesments.id as id,tbl_assesments.total as total from tbl_student,tbl_assesments,tbl_courses where tbl_assesments.year='$school->YEAR' and tbl_assesments.term='$school->TERM'  and tbl_assesments.stuId=tbl_student.ID and tbl_assesments.courseId=tbl_courses.id and tbl_courses.name='".$session->get('SUBJECT')."'  and tbl_courses.classId='".$session->get('CLASS')."' ORDER BY tbl_assesments.total desc");		
+                    $query2=$sql->Prepare("SELECT tbl_assesments.id as id,tbl_assesments.total as total from tbl_student,tbl_assesments,tbl_courses where tbl_assesments.year='$school->YEAR' and tbl_assesments.term='$school->TERM'  and tbl_assesments.stuId=tbl_student.ID and tbl_assesments.courseId=tbl_courses.id and tbl_courses.id='".$session->get('SUBJECT')."'  and tbl_courses.classId='".$session->get('CLASS')."' ORDER BY tbl_assesments.total desc");		
                     
-                    $query1=$sql->Execute($query1);
+                    $query1=$sql->Execute($query2);
                      $inde=0;
                      
                      $row=$query1->RecordCount();
@@ -94,15 +96,16 @@
                      $po=$in."/".$row;
                     
                       $stmt=$sql->Prepare("update tbl_assesments set posInSubject='$po' where id='$ra[id]'") ;
-                     $sql->Execute($stmt);
-
+                      
+                      $sql->Execute($stmt);
+                     
                      }
                      
                      ////////////////////////////////////////////////////////////////////////
                      // starting overall position in class ie class average
                      /////////////////////////////////////////////////////////////////////////
                      
-                         $input1=$sql->Prepare("SELECT id,total,student from tbl_class_members where class='".$session->get('CLASS')."' and year='$school->YEAR' and term='$school->TERM' ORDER BY total desc");
+                        $input1=$sql->Prepare("SELECT id,total,student from tbl_class_members where class='".$session->get('CLASS')."' and year='$school->YEAR' and term='$school->TERM' ORDER BY total desc");
                     
                         $input_=$sql->Execute($input1);
                      
@@ -123,7 +126,7 @@
 
                       }
       
-               }
+               
            
           }
           
@@ -304,15 +307,15 @@
                             </thead>
                             <tbody>
                                 <?php
-                                 $query2=$sql->Prepare("SELECT  tbl_assesments.id AS id,stuId,total,posInSubject ,indexno ,tbl_student.id AS stid,tbl_student.surname AS surname,tbl_student.othernames AS othernames,test1,test2,test3,exam,comments,posInSubject from tbl_student,tbl_assesments,tbl_courses where tbl_assesments.year='$school->YEAR' AND tbl_assesments.term='$school->TERM' AND tbl_assesments.class=tbl_courses.classId AND tbl_assesments.stuId=tbl_student.ID AND tbl_assesments.courseId=tbl_courses.id AND tbl_courses.classId='$_GET[class]' AND tbl_assesments.courseId='$_GET[subject]' ");
-                                 print_r($query2);
-                                 $query=$sql->Execute($query2);
+                                 $query2="SELECT  tbl_assesments.id AS id,stuId,total,posInSubject ,indexno ,tbl_student.id AS stid,tbl_student.surname AS surname,tbl_student.othernames AS othernames,test1,test2,test3,exam,comments,posInSubject from tbl_student,tbl_assesments,tbl_courses where tbl_assesments.year='$school->YEAR' AND tbl_assesments.term='$school->TERM' AND tbl_assesments.class=tbl_courses.classId AND tbl_assesments.stuId=tbl_student.ID AND tbl_assesments.courseId=tbl_courses.id AND tbl_courses.classId='$_GET[class]' AND tbl_assesments.courseId='$_GET[subject]' ";
+                                // print_r($query2);
+                                 $rs = $sql->PageExecute($query2,RECORDS_BY_PAGE,CURRENT_PAGE);
                                 $count=0;
-                               echo  $total_record=$query->RecordCount();
-                                while($rt=$query->FetchRow()){
+                               
+                                while($rt=$rs->FetchRow()){
                                     $count++;
                                     ?>
-                                    <input type="hidden" value="<?php echo $total_record; ?>" name="counter"/>
+                                    <input type="hidden" value="<?php echo  $rs->_maxRecordCount; ?>" name="counter"/>
                                      <input type="hidden" name="indexno[]" id="stu" value="<?php echo $rt[indexno];?>" />
                                      <input type="hidden" name="stuid[]" id="stu" value="<?php echo $rt[id];?>" />
                                      <input type="hidden" name="id[]" id="idd" value="<?php echo $rt[id];?>" />
@@ -320,17 +323,17 @@
                                         <td style="text-align: center"><?php echo $count ?></td>
                                         <td style="text-align:  "><?php echo $rt[indexno] ?></td>
                                         <td style="text-align: left"><?php echo $rt[surname].",".$rt[othernames] ?></td>
-                                        <td style="text-align: center"><input name="q1[]"  onblur="return check(this.id,'test1')" type="text" id="q1<?php echo $thecounter ?>" size="5" maxlength="4" value="<?php echo $rt[test1]; ?>" /></td>
-                                        <td style="text-align: center"> <input name="q2[]"  onblur="return check(this.id,'test2')" type="text" id="q2<?php echo $thecounter ?>" size="5" maxlength="4" value="<?php echo $rt[test2]; ?>" /></td>
-                                        <td style="text-align: center"><input name="q3[]"  onblur="return check(this.id,'test3')" type="text" id="q3<?php echo $thecounter ?>" size="5" maxlength="4" value="<?php echo $rt[test3]; ?>" /></td>
+                                        <td style="text-align: center"><input name="q1[]"    type="text" id="q1<?php echo $thecounter ?>" size="5" maxlength="4" value="<?php echo $rt[test1]; ?>" /></td>
+                                        <td style="text-align: center"> <input name="q2[]"    type="text" id="q2<?php echo $thecounter ?>" size="5" maxlength="4" value="<?php echo $rt[test2]; ?>" /></td>
+                                        <td style="text-align: center"><input name="q3[]"    type="text" id="q3<?php echo $thecounter ?>" size="5" maxlength="4" value="<?php echo $rt[test3]; ?>" /></td>
                                         
                                         <td style="text-align: center"><div align="center"><strong><?php echo ($rt[test1]+$rt[test2]+$rt[test3]+$rt[test4]); ?></strong></td>
-                                        <td style="text-align: center"><div align="center"><strong><?php echo (($rt[test1]+$rt[test2]+$rt[test3]+$rt[test4])/100 * 30); ?></strong></td>
-                                        <input type="hidden" name="thirty[]" value="<?php echo (($rt[test1]+$rt[test2]+$rt[test3]+$rt[test4])/100 * 30); ?>"/>
+                                        <td style="text-align: center"><div align="center"><strong><?php $a= ($rt[test1]+$rt[test2]+$rt[test3]+$rt[test4])* 0.3;echo $a ?></strong></td>
+                                        <input type="hidden" name="thirty[]" value="<?php echo  ($rt[test1]+$rt[test2]+$rt[test3]+$rt[test4])* 0.3; ?>"/>
                                         <td style="text-align: center"><input name="exam[]" type="text" onblur="return check70(this.id)" id="exam<?php echo $thecounter ?>" size="10" maxlength="4" value="<?php echo $rt[exam] ?>" /></td>
                                         
-                                        <td style="text-align: center"><div align="center"><strong><input type="hidden" value="<?php echo ($rt[exam]/100) * 70 ?>" name="seventy[]"><?php echo ($rt[exam]/100) * 70 ?></strong></div></td>
-                                        <td style="text-align: center"><div align="center"><strong><?php echo ($rt[total]); ?></strong></td>
+                                        <td style="text-align: center"><div align="center"><strong><input type="hidden" value="<?php echo  ($rt[exam]/100) * 70 ?>" name="seventy[]"><?php $b=($rt[exam]/100) * 70 ;echo $b ?></strong></div></td>
+                                        <td style="text-align: center"><div align="center"><strong><?php echo $a+$b; ?></strong></td>
                                         <td style="text-align: center"><?php  $rmt= $grade->getGradeValue($rt[total]); echo $rmt->GRADE ?><input type="hidden" name="grade[]" value="<?php  echo $rmt->GRADE ?>"/></td>
                                         <td style="text-align: center"><input type="hidden" name="comment[]" value="<?php  echo $rmt->COMMENT ?>"/><?php  echo $rmt->COMMENT ?></td> 
                                        
@@ -373,34 +376,7 @@
        
           <script src="vendors/bootgrid/jquery.bootgrid.min.js"></script>
        
-        <!-- Data Table -->
-         <!-- Data Table -->
-        <script type="text/javascript">
-            $(document).ready(function(){
-                
-                
-                //Command Buttons
-                $("#data-table-command").bootgrid({
-                    css: {
-                        icon: 'md icon',
-                        iconColumns: 'md-view-module',
-                        iconDown: 'md-expand-more',
-                        iconRefresh: 'md-refresh',
-                        iconUp: 'md-expand-less'
-                    },
-                     caseSensitive: false,
-					  formatters: {
-						"link": function(column, row)
-						{
-							 var cellValue = row["Class"]+"&&subject="+ row["Subject"];
-							return "<a     href=\"list.php?class="+cellValue+"  \"> <span class=\"md md-edit\"></span>   </a>";
-						}
-						 }
-					 
-
-                });
-            });
-        </script>
+        
         <?php $app->exportScript() ?>
     </body>
   
