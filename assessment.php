@@ -204,13 +204,13 @@
                 $term=$_SESSION[term];
                 $subject=$_SESSION[course];
                 $year=$_SESSION[year];
-                if($term=="All Terms" or $term==""){ $ter=""; }else {$term=" and tbl_grades.term = '$term' "  ;}
+                if($term=="All Terms" or $term==""){ $ter=""; }else {$term=" and tbl_assesments.term = '$term' "  ;}
                 if($subject=="All Subjects" or $subject==""){ $inse=""; }else {$inse=" and tbl_courses.name = '$subject' "  ;}
-                if($year=="All Years" or $year==""){ $ins=""; }else {$ins=" and tbl_grades.year = '$year' "  ;}
+                if($year=="All Years" or $year==""){ $ins=""; }else {$ins=" and tbl_assesments.year = '$year' "  ;}
                 if($class=="All Classes" or $class=="" ){ $in=""; }else {$in=" and tbl_courses.classId = '$class' "  ;}
 
                    
-                $query= $sql->Prepare( "SELECT tbl_grades.id as id,total, tbl_student.indexno as stid,tbl_student.surname as surname,tbl_student.othernames as othernames,quiz1,exam,comments,posInSubject,tbl_courses.name as subject,tbl_gradedefinition.grade as grade,tbl_courses.classId as form,tbl_grades.year as year,tbl_grades.term from tbl_student,tbl_grades,tbl_courses,tbl_gradedefinition where  tbl_grades.stuId=tbl_student.id and tbl_grades.courseId=tbl_courses.id and lower <=total  and upper >= total $term $inse $ins $in ");
+                $query= $sql->Prepare( "SELECT tbl_assesments.id as id,total, tbl_student.indexno as stid,tbl_student.surname as surname,tbl_student.othernames as othernames,test1,test2,test3,exam,comments,posInSubject,tbl_courses.name as subject,tbl_gradedefinition.grade as grade,tbl_courses.classId as form,tbl_assesments.year as year,tbl_assesments.term from tbl_student,tbl_assesments,tbl_courses,tbl_gradedefinition where  tbl_assesments.stuId=tbl_student.id and tbl_assesments.courseId=tbl_courses.id and lower <=total  and upper >= total $term $inse $ins $in ");
                 print_r($_SESSION[last_query]);
                                               $rs = $sql->PageExecute($query,RECORDS_BY_PAGE,CURRENT_PAGE);
                                                       $recordsFound = $rs->_maxRecordCount;    // total record found
@@ -234,7 +234,7 @@
                                     <th data-column-id="Term" style="text-align:center">Term</th>
                                      <th data-column-id="Class Score">Class Score</th>
                                     <th data-column-id="Exam Score" data-order="asc" style="text-align:center">Exam Score</th>
-                                     <th data-column-id="Total" data-order="asc" style="text-align:center">Total</th>
+                                     <th data-column-id="Total" data-order="asc" style="text-align:center">Total(30% of cw + 70% exam)</th>
                                      <th data-column-id="Grade" data-order="asc" style="text-align:center">Grade</th>
                                       <th data-column-id="Position" data-order="asc" style="text-align:center">Position</th>
                                 </tr>
@@ -251,13 +251,13 @@
                                      <td><?php echo $count ?></td>
                                     <td style="text-align:left"><?php  echo $rtmt[surname].", ".$rtmt[othernames]; ?></td>
                                     <td><?php echo $rtmt[subject] ?></td>
-                                    <td><?php echo $rtmt[form] ?></td>
-                                    <td><?php echo $rtmt[year] ?></td>
-                                    <td><?php echo $rtmt[term] ?></td>
-                                    <td><?php echo $rtmt[quiz1] ?></td>
-                                    <td><?php echo $rtmt[exam] ?></td>
-                                    <td> <?php echo ($rtmt[total]); ?> </td>
-                                    <td> 
+                                    <td style="text-align:center"><?php echo $rtmt[form] ?></td>
+                                    <td style="text-align:center"><?php echo $rtmt[year] ?></td>
+                                    <td style="text-align:center"><?php echo $rtmt[term] ?></td>
+                                    <td style="text-align:center"><?php echo $rtmt[test1]  ?></td>
+                                    <td style="text-align:center"><?php echo $rtmt[exam] ?></td>
+                                    <td style="text-align:center"> <?php echo ($rtmt[total]); ?> </td>
+                                    <td style="text-align:center"> 
                                       <?php   echo $rtmt['grade'];
 
 
