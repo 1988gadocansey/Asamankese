@@ -288,13 +288,8 @@
                             <th style="text-align: center" ><div align="center">
                                  
                                 
-                              </div>Test 1</th>
-                              <th style="text-align: center" ><div align="center">
-         
-                              </div>Test2</th>
-                              <th style="text-align: center" ><div align="center">
-                                  
-                              </div>Test3</th>
+                              </div>Class Score</th>
+                               
                               <th style="text-align: center" >Total Class Score</th>
                               <th style="text-align: center" >30% Class score</th>
                               <th style="text-align: center" >Exam Score</th>
@@ -307,8 +302,8 @@
                             </thead>
                             <tbody>
                                 <?php
-                                 $query2="SELECT  tbl_assesments.id AS id,stuId,total,posInSubject ,indexno ,tbl_student.id AS stid,tbl_student.surname AS surname,tbl_student.othernames AS othernames,test1,test2,test3,exam,comments,posInSubject from tbl_student,tbl_assesments,tbl_courses where tbl_assesments.year='$school->YEAR' AND tbl_assesments.term='$school->TERM' AND tbl_assesments.class=tbl_courses.classId AND tbl_assesments.stuId=tbl_student.ID AND tbl_assesments.courseId=tbl_courses.id AND tbl_courses.classId='$_GET[class]' AND tbl_assesments.courseId='$_GET[subject]' ";
-                                // print_r($query2);
+                                 $query2="SELECT  tbl_assesments.id AS id,stuId,total,posInSubject ,indexno ,tbl_student.id AS stid,tbl_student.surname AS surname,tbl_student.othernames AS othernames,test1,test2,test3,exam,comments,posInSubject from tbl_student,tbl_assesments,tbl_courses where tbl_assesments.year='$school->YEAR' AND tbl_assesments.term='$school->TERM' AND tbl_assesments.class=tbl_courses.classId AND tbl_assesments.stuId=tbl_student.ID AND tbl_assesments.courseId=tbl_courses.id AND tbl_assesments.class='$_GET[class]' AND tbl_assesments.courseId='$_GET[subject]' ";
+                               // print_r($query2);
                                  $rs = $sql->PageExecute($query2,RECORDS_BY_PAGE,CURRENT_PAGE);
                                 $count=0;
                                
@@ -323,10 +318,8 @@
                                         <td style="text-align: center"><?php echo $count ?></td>
                                         <td style="text-align:  "><?php echo $rt[indexno] ?></td>
                                         <td style="text-align: left"><?php echo $rt[surname].",".$rt[othernames] ?></td>
-                                        <td style="text-align: center"><input name="q1[]"    type="text" id="q1<?php echo $thecounter ?>" size="5" maxlength="4" value="<?php echo $rt[test1]; ?>" /></td>
-                                        <td style="text-align: center"> <input name="q2[]"    type="text" id="q2<?php echo $thecounter ?>" size="5" maxlength="4" value="<?php echo $rt[test2]; ?>" /></td>
-                                        <td style="text-align: center"><input name="q3[]"    type="text" id="q3<?php echo $thecounter ?>" size="5" maxlength="4" value="<?php echo $rt[test3]; ?>" /></td>
-                                        
+                                        <td style="text-align: center"><input name="q1[]"    type="text" id="q1<?php echo $thecounter ?>" size="5" maxlength="3" value="<?php echo $rt[test1]; ?>" /></td>
+                                         
                                         <td style="text-align: center"><div align="center"><strong><?php echo ($rt[test1]+$rt[test2]+$rt[test3]+$rt[test4]); ?></strong></td>
                                         <td style="text-align: center"><div align="center"><strong><?php $a= ($rt[test1]+$rt[test2]+$rt[test3]+$rt[test4])* 0.3;echo $a ?></strong></td>
                                         <input type="hidden" name="thirty[]" value="<?php echo  ($rt[test1]+$rt[test2]+$rt[test3]+$rt[test4])* 0.3; ?>"/>

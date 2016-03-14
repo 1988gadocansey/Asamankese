@@ -221,14 +221,14 @@
                   
                   if($_SESSION[level]=='Administrator'){  
                   
-				   $query= $sql->Prepare( "SELECT * FROM tbl_courses AS c JOIN tbl_workers AS w ON c.teacherID=w.emp_number ");
+				   $query= $sql->Prepare( "SELECT * FROM tbl_courses   WHERE     year='$school->YEAR' and term='$school->TERM' $end_query");
                  
                   }
                   else{
-                     $query= $sql->Prepare( "SELECT * FROM tbl_courses AS c JOIN tbl_workers AS w ON c.teacherID=w.emp_number AND c.teacherID='$teacher->EMP_NUMBER'  $end_query ");
+                     $query= $sql->Prepare( "SELECT * FROM tbl_courses AS c JOIN tbl_workers AS w ON c.teacherID=w.emp_number AND c.teacherID='$teacher->EMP_NUMBER' AND   year='$school->YEAR' and term='$school->TERM' $end_query ");
                  
                   }
-                                   // print_r($query);
+                                     print_r($query);
 											 
                                                      $rs = $sql->PageExecute($query,RECORDS_BY_PAGE,CURRENT_PAGE);
                                                       $recordsFound = $rs->_maxRecordCount;    // total record found

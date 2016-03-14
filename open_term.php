@@ -6,7 +6,8 @@
      global $sql;
     $app=new classes\structure();
     $help=new classes\helpers();
-    
+    $school=new classes\School();
+     $school=$school->getAcademicYearTerm();
     $notify=new classes\Notifications();
     $teacher=new classes\Teacher();
     if(isset($_GET[add])==1){
@@ -100,7 +101,7 @@
                                                                                           <?php
                                                                      global $sql;
 
-                                                                     $query2 = $sql->Prepare("SELECT *  FROM   tbl_courses");
+                                                                     $query2 = $sql->Prepare("SELECT *  FROM   tbl_courses WHERE  year='$school->YEAR' and term='$school->TERM'");
 
 
                                                                      $query = $sql->Execute($query2);
