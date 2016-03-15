@@ -139,7 +139,28 @@ xmlhttp.send();
                                                                  <select class='form-control'   id='subject'   name="subject"  >
                                                                      <option value=''>select subject</option>
                                                                            
-                                                                         <!-- comes through ajax -->
+                                                                        <?php 
+																			  
+																				  
+																				  
+																				  
+																				  
+																				  
+								$result2=$sql->Prepare(" SELECT name FROM tbl_subjects  ");
+																				  
+									$result=$sql->Execute($result2);											  
+															$num=0;
+											while($row2=$result->FetchRow($result))
+																
+															{
+															$name=$row2[name];
+															 
+															$num++;
+	echo"<option Class='' value='$name' name='group'>$name</option>";
+															}
+																				  
+
+ ?>
                                                                       </select>
                                                              </div>
                                                          </div>
@@ -247,7 +268,7 @@ xmlhttp.send();
                       
                <td>&nbsp;</td>
                 <td width="25%">
-                <select class='form-control'  name='year'  style="margin-left:2%; width:190px " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?subject='+escape(this.value);" >
+                <select class='form-control'  name='year'  style="margin-left:2%; width:190px "  >
                   <option value=''>Filter subject</option>
                   	  <option value='all'>All</option>
                       <?php 
