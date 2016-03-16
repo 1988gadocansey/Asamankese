@@ -1,0 +1,8 @@
+<br />
+<b>Notice</b>:  A session had already been started - ignoring session_start() in <b>D:\xampp\htdocs\SchoolManagement\library\classes\Session.class.php</b> on line <b>7</b><br />
+SELECT tbl_grades.id as id,total,posInSubject ,tbl_student.id as stid,tbl_student.surname as surname,tbl_student.othernames as othernames,quiz1,quiz2,quiz3,exam,comments,posInSubject from tbl_student,tbl_grades,tbl_courses where tbl_grades.year='2014/2015' and tbl_grades.term='1' and tbl_grades.stuId=tbl_student.indexno and tbl_grades.courseId=tbl_courses.id and tbl_courses.classId='BASIC 6' and tbl_courses.name='R.M.E' ORDER BY tbl_student.surname asc,tbl_student.othernames asc<br />
+<b>Notice</b>:  Undefined variable: term in <b>D:\xampp\htdocs\SchoolManagement\excel.php</b> on line <b>38</b><br />
+
+No.,IndexNo,Name,Quiz1,Quiz2,Quiz3,Exam
+1,4,"Otuteye,Godstaff Kweku",10,10,10,142.85714285714
+2,2,"Owusu,Ansah baah",100,100,100,142.85714285714
