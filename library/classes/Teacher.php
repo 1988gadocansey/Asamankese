@@ -31,6 +31,26 @@ class Teacher {
 				 
                                 }
     }
+    public function getSignature($teacher){
+         
+        $query=  $this->connect->Prepare("SELECT W.NAME AS FNAME,W.SURNAME AS SURNAME FROM tbl_workers AS W JOIN tbl_courses AS C ON W.EMP_NUMBER=C.teacherId WHERE teacherId='$teacher' ");
+        $stmt= $this->connect->Execute( $query);
+       // print_r($query);
+       if($stmt->RecordCount() > 0){
+					
+				 
+                                    $a= $stmt->FetchNextObject();
+                                    
+                                    $fname=  str_split($a->FNAME);
+                                   $f= $fname[0];
+				 $lname=  str_split($a->SURNAME);
+                                 $l=$lname[0];
+                                  
+                                 return $f.'.'.$l;
+                                }
+     
+    }
+
     // get the class of a teacher
 	public function getTeacher_Class($teacher){
         $query=  $this->connect->Prepare("SELECT * FROM tbl_courses WHERE teacherId='$teacher'");

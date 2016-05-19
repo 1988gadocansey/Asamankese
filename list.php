@@ -60,16 +60,17 @@
 	       //first select the total of total scores of all scores in all subject in that year
                 
                     $stmt1=$sql->Prepare("select sum(total) as total from tbl_assesments where stuId='$student_id_' and year='$school->YEAR' and term='$school->TERM'");
+                  //  print_r($stmt1);
                     $a=$sql->Execute($stmt1);
                     
-                    while($row=$a->FetchRow()){
-             
+                     $row=$a->FetchRow() ;
+             	 
                         $stmt=$sql->Prepare("update tbl_class_members set total='$row[total]' where STUDENT='$indexno_' and  year='$school->YEAR' and term='$school->TERM'")  ;
-                    
-                        $sql->Execute($stmt);
+                   // print_r($stmt);
+                       $sql->Execute($stmt);
                     
                         
-                    }
+                    
                     
                     $rtmt=$sql->Prepare("UPDATE tbl_assesments SET test1='$test1_',test2='$test2_',test3='$test3_',exam='$exam_',total='$total',comments='$comment_' , grade='$grade_value_' ,entered_by='$_SESSION[ID]' WHERE id='$student_id_'") ;
                     
@@ -202,7 +203,7 @@
                                Continuous Assesment Section
                             </p>
                           <div style="margin-top:-3%;float:right">
-                                <?php if($teacher->USER_TYPE=='Administrator'){ ?> <button data-toggle="modal" href="#modalWider" class="btn bgm-pink waves-effect">Create new user</button><?php }?>
+                               <!--<?php if($teacher->USER_TYPE=='Administrator'){ ?> <button data-toggle="modal" href="#modalWider" class="btn bgm-pink waves-effect">Create new user</button><?php }?>-->
                                <?php if($teacher->USER_TYPE=='Teacher'){ ?>  <button   class="btn btn-primary waves-effect waves-button dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars"></i> Export Data</button><?php }?>
                                         <ul class="dropdown-menu">
                                             
@@ -248,11 +249,11 @@
                                 &nbsp;| &nbsp;  &nbsp;TERM = <?php echo $school->TERM?>
                             </td>
                             <td> &nbsp; &nbsp; &nbsp; &nbsp;</td>
-                            <Td>
+                           <!-- <Td>
                                 <a href="excel.php?form=<?php echo $session->get("CLASS"); ?>&amp;course=<?php echo $session->get("SUBJECT"); ?>" ><img src='images/excel.png' width="24"/> Export to excel</a>
                             </Td>
                             <Td></Td>
-                            </tr>
+                            </tr>-->
                             </table>
                                  
                         </div>    
@@ -266,6 +267,7 @@
                             <thead>
                             <th style="text-align: center">#</th>
                             <th style="text-align:  ">INDEX NO</th>
+                            
                             <th>STUDENT</th>
                             <?php 
                             
@@ -284,12 +286,12 @@
                               <th style="text-align: center" >Total (30% + 70%)</th>
                               <th style="text-align: center" >Grade</th>
                              
-                              <th  style="text-align: center" ><div align="center">Comments</div></th>
+                              <th  style="text-align:" ><div align="">Comments</div></th>
                                <th style="text-align: center" >Position</th>
                             </thead>
                             <tbody>
                                 <?php
-                                 $query2="SELECT  tbl_assesments.id AS id,stuId,total,posInSubject ,indexno ,tbl_student.id AS stid,tbl_student.surname AS surname,tbl_student.othernames AS othernames,test1,test2,test3,exam,comments,posInSubject from tbl_student,tbl_assesments,tbl_courses where tbl_assesments.year='$school->YEAR' AND tbl_assesments.term='$school->TERM' AND tbl_assesments.class=tbl_courses.classId AND tbl_assesments.stuId=tbl_student.ID AND tbl_assesments.courseId=tbl_courses.id AND tbl_assesments.class='$_GET[class]' AND tbl_assesments.courseId='$_GET[subject]' ";
+                                 $query2="SELECT  tbl_assesments.id AS id,stuId,total,posInSubject ,indexno ,tbl_student.id AS stid,tbl_student.surname AS surname,tbl_student.othernames AS othernames,test1,test2,test3,exam,comments,posInSubject from tbl_student,tbl_assesments,tbl_courses where tbl_assesments.year='$school->YEAR' AND tbl_assesments.term='$school->TERM' AND tbl_assesments.class=tbl_courses.classId AND tbl_assesments.stuId=tbl_student.ID AND tbl_assesments.courseId=tbl_courses.id AND tbl_assesments.class='$_GET[class]' AND tbl_assesments.courseId='$_GET[subject]' ORDER BY tbl_student.GENDER desc,SURNAME";
                                 //print_r($query2);
                                  $rs = $sql->PageExecute($query2,RECORDS_BY_PAGE,CURRENT_PAGE);
                                 $count=0;
@@ -299,11 +301,12 @@
                                     ?>
                                     <input type="hidden" value="<?php echo  $rs->_maxRecordCount; ?>" name="counter"/>
                                      <input type="hidden" name="indexno[]" id="stu" value="<?php echo $rt[indexno];?>" />
-                                     <input type="hidden" name="stuid[]" id="stu" value="<?php echo $rt[id];?>" />
+                                     <input type="hidden" name="stuid[]" id="stu" value="<?php echo $rt[stuId];?>" />
                                      <input type="hidden" name="id[]" id="idd" value="<?php echo $rt[id];?>" />
                                     <tr>
                                         <td style="text-align: center"><?php echo $count ?></td>
                                         <td style="text-align:  "><?php echo $rt[indexno] ?></td>
+                                         
                                         <td style="text-align: left"><?php echo $rt[surname].",".$rt[othernames] ?></td>
                                         <td style="text-align: center"><input name="q1[]"     type="text" class="work" size="5" maxlength="3" value="<?php echo $rt[test1]; ?>" /></td>
                                          
@@ -315,24 +318,27 @@
                                         <td  style="text-align: center;display: none"><div align="center"><strong><input type="hidden" value="<?php echo  ($rt[exam]/100) * 70 ?>" name="seventy[]"><?php $b=($rt[exam]/100) * 70 ;echo $b ?></strong></div></td>
                                         <td style="text-align: center"><div align="center"><strong><?php echo $a+$b; ?></strong></td>
                                         <td style="text-align: center"><?php  $rmt= $grade->getGradeValue($rt[total]); echo $rmt->GRADE ?><input type="hidden" name="grade[]" value="<?php  echo $rmt->GRADE ?>"/></td>
-                                        <td style="text-align: center"><input type="hidden" name="comment[]" value="<?php  echo $rmt->COMMENT ?>"/><?php  echo $rmt->COMMENT ?></td> 
+                                        <td style="text-align:"><input type="hidden" name="comment[]" value="<?php  echo $rmt->COMMENT ?>"/><?php  echo $rmt->COMMENT ?></td> 
                                        
-                                         <td style="text-align: center"><?php echo $rt['posInSubject']; ?>&nbsp;</td>
+                                         <td style="text-align: center"><?php echo $rt['posInSubject']; ?></td>
                                        
                                      </tr>
                                 <?php }?>
                             </tbody>
                           </table>
                           
-                              <center><div style="position: fixed;  bottom: 0px;left: 43%  ">
+                              <center><div style="position: fixed;  bottom: 0px;left: 50%  ">
                                 <p >
                                   <input type="hidden" name="upper" value="<?php echo $count++;?>" id="upper" />
                                   <label>
-                                    <input  type="submit" name="submit" id="submit" class="btn btn-success" value="UPDATE RECORDS" />
+                                    <input  type="submit" name="submit" id="submit" class="btn btn-success" value="Save"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     </label>
-                                  <label>
-                                    <input type="submit" name="button" id="button" class="btn btn-warning" value="RESET" />
+                                     <label>
+                                    <input  type="submit" name="submit" id="submit" class="btn btn-primary btn-sm" value="Update Records"/>
                                     </label>
+                                 <!-- <label>
+                                    <input type="submit" name="button" id="button" class="btn btn-warning btn-lg" value="RESET" />
+                                    </label>-->
                                 </p>
                                   </div></center>
                           </form>

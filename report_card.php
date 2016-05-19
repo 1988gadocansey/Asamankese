@@ -11,6 +11,8 @@
          $app=new classes\structure();
          $studentNo=$help->getIndex($_GET[student]);
          $notify=new classes\Notifications();
+         $teacher=new classes\Teacher();   
+                
         
   ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -21,115 +23,207 @@
 <?php  $app->gethead(); ?>
 <style>
     html{
-        font-size: 15px;
+        font-size: 14px;
+    }
+    #report{
+       
+        border: #ff9900;
+         border-style: solid;
+         display: table;
+        border-collapse: separate;
+        border: solid 1px #98BF21;
+        line-height: 1.4em;
+        border-collapse:separate;
+    }
+    #report td ,th{
+        border: 1px solid #98BF21;
+        padding: 3px 7px 2px;
+        background-color: #EAF2D3;
+        padding: 3px 7px 2px;
     }
 </style>
 </head>
 <body>
-    
-   <table width="81%" height="" border="0" style="" align="center">
-  <tr>
-      <th height="121" align="center" valign="bottom" scope="row"><img src="images/printout.JPG" alt="banner" width="92%" height="140" /></th>
-  </tr>
-       <tr><td>&nbsp;</td></tr>
-  <tr>
-      
-    <th height="47" align="center" valign="top" scope="row"><div align="center">
-        <div   style="  ">
-          <table  width="934"  border="0" cellspacing="1">
-              <tr>
-              <th height="21" align="center"    valign="middle" scope="row"><p align="left" class=" ">NAME:</p></th>
-              <th width="32%" height="21" align="center" valign="middle" scope="row">
-                <?php 
-			$thisterm=$school->TERM;
-			$thisyear=$school->YEAR;
-			  $query=$sql->Prepare("Select *,tbl_class_members.class as stage from tbl_student,tbl_classes,tbl_class_members where tbl_student.ID='$_GET[student]'  and tbl_class_members.student=tbl_student.indexno and tbl_classes.name=tbl_student.class and tbl_class_members.year='$thisyear' and tbl_class_members.term='$thisterm' ");
-                        
-                          $result=$sql->Execute($query) ; 
-                         
-                        while($row = $result->FetchRow())
-                        { 
+    <?php
+     
+      $thisterm = $school->TERM;
+    $thisyear = $school->YEAR;
+    $query = $sql->Prepare("Select *,tbl_class_members.class as stage from tbl_student,tbl_classes,tbl_class_members where tbl_student.ID='$_GET[student]'  and tbl_class_members.student=tbl_student.indexno and tbl_classes.name=tbl_student.class and tbl_class_members.year='$thisyear' and tbl_class_members.term='$thisterm' ");
 
-                        ?>
-             <div align="left"><?php  echo $row['SURNAME'].", ".$row['OTHERNAMES']; ?> </div></th>
-              <th width="15%" align="center" valign="middle" scope="row"><div align="right" class="style11">CLASS :</div></th>
-              <th align="center" valign="middle" scope="row"><div align="left"> <?php echo $sta=$row['stage'] ?></div></th>
-              <th width="11%" colspan="2" rowspan="4" align="center" valign="middle" scope="row"><img <?php echo $help->picture("studentPhotos/$studentNo.jpg",120)?> style="margin-left:-70%" src="<?php echo "studentPhotos/$studentNo.jpg" ?>" alt="" /></th>
-            </tr>
+    $result = $sql->Execute($query);
+    $row = $result->FetchNextObject();
+    $term = ($school->YEAR) % 3;
+    $newterm = ++$term;
+    if ($newterm == 1) {
+        $newyear = $help->nextyear($school->YEAR);
+    } else {
+        $newyear = $school->YEAR;
+    }
+    ?>
+    <table align="center"  >
+        <tr>
+            <td><img src="images/logo1.png" style="width:90px;height: auto"/></td>
+            <td style="text-align: center;text-transform: uppercase;width: 460px"><h4>Asamankese Senior High School<br/>
+              P.O.BOX 110, Asamankese E/R<br/>Tel:</h4>
+                <hr style="color:black">
+      </td>
+             <td valign="baseline"><img <?php echo $help->picture("studentPhotos/$studentNo.jpg",120)?> style="margin-left: 103px" src="<?php echo "studentPhotos/$studentNo.jpg" ?>" alt="" /></td>
+      
+        </tr>
+        <tr>
+            <td colspan="5" style="border-color:#ff9900">
+                <div style='margin-left: 243px;'><h4> <STUDENT REPORT<h4></div>
+            </td>
+        </tr>
+    </table>
+    <div style="margin-left: 494px;background-color: #ff9900;padding:6px;width: 200px;color:white"><b><?php echo $row->SURNAME.' '.$row->FIRTNAME.' '.$row->OTHERNAMES; ?></b></div>
+    <br/>
+    <center><table id="transcript" class='table table-vmiddle'>
+
             <tr>
-              <th height="22" scope="row"><div align="right" class="style11">
-                <div align="left">YEAR:</div>
-              </div></th>
-              <th scope="row"><div align="left"><?php echo $school->YEAR; ?></div></th>
-              <th scope="row"><div align="right" class="style11">TERM </div></th>
-              <th width="30%" scope="row"><div align="left">: <?php echo $school->TERM; ?></div></th>
-            </tr>
-            <tr>
-              <th height="20" scope="row"><div align="right" class="style11">
-                <div align="left"><strong>NO.ON ROLL:</strong></div>
-              </div></th>
-              <th height="20" scope="row"><div align="left">
-                <?php echo $student->getTotalStudent_by_Class($row['class'],$school->YEAR,$school->TERM) ?>
-		   
-              </div></th>
-              <th scope="row"><div align="right" class="style11">DATE:</div></th>
-              <th scope="row"><div align="left"><?php echo date('D, d/m/Y') ?></div></th>
-            </tr>
-            <tr>
-              <th width="12%" nowrap='nowrap' scope="row"><div align="right" class="style11">
-                <div align="left">NEXT TERM BEGINS:</div>
-              </div></th>
-              <th scope="row"><div align="left">
+                 <td  colspan=""><div align="left"><span class="rp">CLASS</span> : 
+                <?php echo strtoupper($row->CLASS); ?>
+                </div></td>  
                 
-               
-                  <?php $term=($school->YEAR)%3; 
-                    $newterm= ++$term;
-                    if($newterm==1){$newyear=$help->nextyear($school->YEAR);}
-                    else{ $newyear=$school->YEAR;}
-                     }
-                    $stmt=$sql->Prepare("select BEGINS from tbl_academic_year where year='$newyear' and term='$newterm'");
-                     
-                    $stmt=$sql->Execute($stmt);
-                     while($year=$stmt->FetchRow()){
-                     echo  date("d/m/Y",$year[BEGINS]);
+                 <td>&nbsp;</td>
+                 
+                <td  colspan=""><div align="left"><span class="rp">TERM</span> : 
+                <?php echo$school->TERM; ?>
+                </div></td>
+                 <td>&nbsp;</td>
+                 
+                <td  colspan=""><div align="left"><span class="rp">CLOSING DATE</span> : 
+                 <?php
+                    $terms=$sql->Prepare("select ENDS from tbl_academic_year where year='$school->YEAR' and term='$school->TERM'");
+                    //print_r($terms);
+                    $tterms=$sql->Execute($terms);
+                     while($y=$tterms->FetchRow()){
+                     echo   date('d/m/Y',$y[ENDS]);
                      }
                      ?>
-                     &nbsp;</div>            <div align="right"></div>            <div align="left"></div></th>
-              <th nowrap='nowrap' scope="row"><div align="right" class="style11"></div></th>
-              <th scope="row"><div align="left"></div></th>
+                </div></td>
+                
             </tr>
-          </table>
-        </div>
+             <tr>
+                 <td  colspan=""><div align="left"><span class="rp">YEAR</span> : 
+                <?php echo strtoupper($school->YEAR); ?>
+                </div></td>  
+                 <td>&nbsp;</td>
+                 
+                <td  colspan=""><div align="left"><span class="rp">STUDENT ID</span> : 
+                <?php echo$row->INDEXNO; ?>
+                </div></td>
+                 <td>&nbsp;</td>
+                 
+                <td  colspan=""><div align="left"><span class="rp">REOPENING</span> : 
+                 <?php
+                    $terms=$sql->Prepare("select ENDS from tbl_academic_year where year='$school->YEAR' and term='$school->TERM'");
+                    //print_r($terms);
+                    $tterms=$sql->Execute($terms);
+                     while($y=$tterms->FetchRow()){
+                     echo   date('d/m/Y',$y[ENDS]);
+                     }
+                     ?>
+                </div></td>
+                
+            </tr>
+            
+            
+                <tr>
+                 <td  colspan=""><div align="left"><span class="rp">PROGRAMME</span> : 
+                <?php echo $row->PROGRAMME; ?>
+                </div></td>  
+                 <td>&nbsp;</td>
+                 
+                <td  colspan=""><div align="left"><span class="rp">HOUSE</span> : 
+                <?php echo$row->HOUSE; ?>
+                </div></td>
+                 <td>&nbsp;</td>
+                 
+                <td  colspan=""><div align="left"><span class="rp">POSITION IN CLASS</span> : 
+                   
+                <?php echo$row->POSITION; ?>
+                </div></td>
+                </div></td>
+                
+            </tr>
+     </table></center>
+    
         <hr/>
-        <table width="92%" style="font-size:15px" height="" border="1"  class="table table-bordered" cellpadding="1" cellspacing="1" bordercolor="#FFFFFF">
-        <thead style="background-color:#009688;color:#FFFCBE">
+         
+        <table width="92%" style="font-size:15px" height="" border="1"  class="table table-bordered" cellpadding="1" border="1" id='report' bordercolor="#FFFFFF">
+        <thead >
           <tr>
-            <td  width="198" height="48" ><strong>Subject</strong></td>
+            <td  width="198" height="48" ><strong>Core Subjects</strong></td>
               <td  width="122"><div align="center"><strong>Class Score 30%</strong></div></td>
               <td  width="122"><div align="center"><strong>Exam Score 70%</strong></div></td>
               <td  width="122"><div align="center"><strong>Total Score 100%</strong></div></td>
-              <td ><div align="center"><strong>Grade</strong></div></td>
-              <td ><div align="center">Position</div></td>
-              <td ><div align="center"><strong>Class Teacher's Remark  </strong></div></td>
+              <td><div align="center"><strong>Grade</strong></div></td>
+              <td><div align="center"><strong>Position</strong></div></td>
+              <td><div align="center"><strong>Remarks  </strong></div></td>
+              <td><div align="center"><strong>Sign  </strong></div></td>
             </tr>
           </thead>
         <tbody>
   
-          <tr bordercolor="#AED7FF"    >
+          <tr>
             <?php 
 		  
 		  
-		$stmt=$sql->Prepare("select * from tbl_assesments,tbl_courses,tbl_subjects where tbl_assesments.stuId='$_GET[student]' and tbl_assesments.year='$school->YEAR' and tbl_assesments.term='$school->TERM' and tbl_assesments.courseId=tbl_courses.id and tbl_subjects.name=tbl_courses.name order by tbl_subjects.type ASC,tbl_subjects.name ASC");
-		print_r($stmt); 
-                $stmt=$sql->Execute($stmt);
-                $t=$stmt->RecordCount();
+		$stmt22=$sql->Prepare("select * from tbl_assesments,tbl_courses,tbl_subjects where tbl_assesments.stuId='$_GET[student]' and tbl_assesments.year='$school->YEAR' and tbl_assesments.term='$school->TERM' and tbl_assesments.courseId=tbl_courses.id and tbl_subjects.name=tbl_courses.name and tbl_subjects.type='core' order by tbl_subjects.type ASC,tbl_subjects.name ASC");
+		 
+                $stmt21=$sql->Execute($stmt22);
+                $t=$stmt21->RecordCount();
 
-                while($r =$stmt->FetchRow())
+                while($r =$stmt21->FetchRow())
 
                 {
 
                 ?>
-          <tr >
+          <tr>
+            <td height="43" nowrap='nowrap' ><div align="left"><?php echo $r[name]; ?></div></td>
+              <td ><div align="center"><?php $_SESSION[teach]=$r[teacherId];echo ($r[test1]+$r[test2]+$r[test3]+$r[test4])*0.3 ;?></div></td>
+              <td ><div align="center"><?php echo $r[exam];?></div></td>
+              <td ><div align="center"><?php echo $r[total]; $ttotal+=$r[total]; if($r['total']>0){ $cout=$cout+100;}?></div></td>
+              <td width="81" >
+                <div align="center">
+                  <?php 
+                   $stmt=$sql->Prepare("select grade,valu,comment from tbl_gradedefinition where   lower <='$r[total]'  and upper >= '$r[total]'") ;
+                  $stmt=$sql->Execute($stmt);
+                  while($rq= $stmt->FetchRow($stmt)){
+				  echo $rq['grade'];
+				  $va=$rq['valu'];
+				  $co=$rq['comment'];
+				  }
+				  $aggregade+=$va;
+				  ?>
+              </div></td>
+              <td width="80" ><div align="center"><?php echo $r['posInSubject'];?></div></td>
+              <td width="157"  ><div align="center"><?php echo $co;
+                  ?></div></td>
+              <td width="157"  ><div align="center"><?php echo strtoupper($teacher->getSignature($_SESSION[teach]));
+                  ?></div></td>
+              <?php 
+				  
+             } ?>
+          </tr>
+              <!--  Electives -->
+              <tr><td><div align="left" style="margin-left:5px"><h4>Elective Subjects<h4></div></td></tr>
+     <?php 
+		  
+		  
+		$stmt2=$sql->Prepare("select * from tbl_assesments,tbl_courses,tbl_subjects where tbl_assesments.stuId='$_GET[student]' and tbl_assesments.year='$school->YEAR' and tbl_assesments.term='$school->TERM' and tbl_assesments.courseId=tbl_courses.id and tbl_subjects.name=tbl_courses.name and tbl_subjects.type='elective' order by tbl_subjects.type ASC,tbl_subjects.name ASC");
+		  
+                $stmt3=$sql->Execute($stmt2);
+                $t=$stmt3->RecordCount();
+
+                while($r =$stmt3->FetchRow())
+
+                {
+                     
+
+                ?>
+          <tr>
             <td height="43" nowrap='nowrap' ><div align="left"><?php echo $r[name]; ?></div></td>
               <td ><div align="center"><?php echo ($r[test1]+$r[test2]+$r[test3]+$r[test4])*0.3 ;?></div></td>
               <td ><div align="center"><?php echo $r[exam];?></div></td>
@@ -150,10 +244,12 @@
               <td width="80" ><div align="center"><?php echo $r['posInSubject'];?></div></td>
               <td width="157"  ><div align="center"><?php echo $co;
 				  ?></div></td>
+              <td width="157"  ><div align="center"><?php echo strtoupper($teacher->getSignature($r[teacherId]));
+                  ?></div></td>
               <?php 
 				  
-    } ?>
-          
+             } ?>
+          </tr>
             <tr>
           
             <td  ><div align="right">Total Score : </div></td>
@@ -163,6 +259,14 @@
             <td colspan="2" ><div align="right"></div></td>
             <td >&nbsp;</td>
             </tr>
+          </tr>
+          </tr>
+            
+            
+            
+            
+            
+            
           </tbody>
         <tfoot>
           </tfoot>
@@ -177,7 +281,7 @@
 <table width="92%" style=" " height="496" border="0" align="center">
       <tr></tr>
       <tr>
-        <td width="291" height="47"><div align="left"><span class="style11">ATTENDANCE</span>:
+        <td width="291" height="47"><div align="left"><span class="rp">ATTENDANCE</span>:
           <?php 
 		
 		 $stmt=$sql->Prepare("select * from tbl_class_members where student='$studentNo' and year='$school->YEAR' and term='$school->TERM'");
@@ -188,49 +292,52 @@
 
             { echo $r[attendance]; ?>
         </div></td>
-        <td width="231"><div align="right">Promoted to : </div></td>
+        <td width="231"><div align="right">PROMOTED TO : </div></td>
         <td width="243"><div align="left">
           <?php  echo $r['promotedTo']; ?>
         </div>
           <div align="right"></div></td>
       </tr>
       <tr>
-        <td  colspan="3"><div align="left"><span class="style11">CONDUCT</span> : 
+        <td  colspan=""><div align="left"><span class="rp">CONDUCT</span> : 
           <?php  echo $r[conduct]; ?>
           </div></td>
-      </tr>
-      <tr>
-        <td  colspan="3" align="left"><span class="style11">ATTITUDE</span> :
+      
+        <td  colspan="" align="left"><span class="rp">ATTITUDE</span> :
           <?php  echo $r[attitude]; ?></td>
-      </tr>
-      <tr>
-        <td  colspan="3" align="left"><span class="style11">INTEREST</span> :
+       
+        <td    align="left"><span class="rp">INTEREST</span> :
           <?php  echo $r[interest]; ?></td>
       </tr>
       
       <tr>
-        <td  colspan="3"><div align="left">
-          <span class="style11">CLASS TEACHER'S REPORT:</span> <?php echo $r[form_mast_report]; ?> 
+        <td><div align="left">
+          <span class="rp">FORM MASTER'S REMARK:</span> <?php echo $r[house_mast_report]; ?> 
           </div></td>
       </tr>
       <tr>
-        <td  colspan="3"><div align="left">
-          <p><span class="style11">HEADMASTER'S REMARKS </span>:<?php echo $r[head_mast_report]; }?></p>
+        <td><div align="left">
+          <span class="rp">HOUSE MASTER'S REMARK:</span> <?php echo $r[form_mast_report]; ?> 
+          </div></td>
+      </tr>
+      <tr>
+        <td><div align="left">
+          <p><span class="rp">HEAD OF INSTITUTION'S REMARKS </span>:<?php echo $r[head_mast_report]; }?></p>
         </div>          
           </label></td>
       </tr>
       <tr>
-        <td><p align="center"><img src="images/signature.jpg" alt="..................." width="243" height="90" /></p>          </td>
+          <td style="" colspan="4"align="center"> <img src="images/signature.jpg" alt="..................."style="width:234px;height: auto" />          
          
-      </tr>
-      <tr>
-          <td><div align="center"><?PHP  echo $config->SCHOOL_HEAD;?> <br/>(Head Teacher )</div></td>
+      
+           <div align="center"><?PHP  echo $config->SCHOOL_HEAD;?> <br/>(Head Teacher )</div></td>
          
       </tr>
       
     </table></th>
   </tr>
 </table>
+<div align="center"><small>Powered by DEK IT Consult(Softbox) | Elmina-Cape Coast C/R Tel:+244505284060,+233241999094 www.dekITC.com</small></div>
     <script>
     window.print();
     </script>

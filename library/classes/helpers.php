@@ -4,6 +4,7 @@
  * 
  * @author Administrator
  */
+
 namespace classes;
 use classes\Core;
 class helpers {
@@ -21,12 +22,26 @@ class helpers {
         return $data->NAME;
          
      }
+     public function getGrade($mark){
+        $query=$this->connect->Prepare("SELECT grade FROM tbl_gradedefinition WHERE lower <='$mark'  and upper >= '$mark'");
+        $query2=$this->connect->Execute($query);
+        $data=$query2->FetchNextObject();
+        return $data->GRADE;
+         
+     }
      
       public function getIndex($id){
         $query=$this->connect->Prepare("SELECT INDEXNO FROM tbl_student WHERE ID='$id'");
         $query2=$this->connect->Execute($query);
         $data=$query2->FetchNextObject();
         return $data->INDEXNO;
+         
+     }
+      public function getName($id){
+        $query=$this->connect->Prepare("SELECT SURNAME,OTHERNAMES FROM tbl_student WHERE ID='$id'");
+        $query2=$this->connect->Execute($query);
+        $data=$query2->FetchNextObject();
+        return $data->SURNAME." ".$data->OTHERNAMES;
          
      }
      public function getID($indexno){
@@ -373,4 +388,58 @@ public function UpdateReceipt(){
     $query2=  $this->connect->Execute($query);
     
 }
+
+public function firesms($message,$phone,$receipient){
+    
+        // echo $phone;
+        
+        //print_r($contacts);
+        if (!empty($message)&& !empty($receipient)) {
+    
+                 //$key = "83f76e13c92d33e27895";
+                $message = urlencode($message);
+                $phone = str_replace(' ', '', $phone);
+                 $phone = str_replace('-', '', $phone);
+                 $phone="+233".\substr($phone,1,9);
+            $url = 'http://txtconnect.co/api/send/'; 
+            $fields = array( 
+            'token' => \urlencode('a166902c2f552bfd59de3914bd9864088cd7ac77'), 
+            'msg' => \urlencode($message), 
+            'from' => \urlencode("TPOLY"), 
+            'to' => \urlencode($phone), 
+            );
+            $fields_string = ""; 
+                    foreach ($fields as $key => $value) { 
+                    $fields_string .= $key . '=' . $value . '&'; 
+                    } 
+                    \rtrim($fields_string, '&'); 
+                    $ch = \curl_init(); 
+                    \curl_setopt($ch, \CURLOPT_URL, $url); 
+                    \curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true); 
+                    \curl_setopt($ch, \CURLOPT_FOLLOWLOCATION, true); 
+                    \curl_setopt($ch, \CURLOPT_POST, count($fields)); 
+                    \curl_setopt($ch, \CURLOPT_POSTFIELDS, $fields_string); 
+                    \curl_setopt($ch, \CURLOPT_SSL_VERIFYPEER, 0); 
+                    $result2 = \curl_exec($ch); 
+                    \curl_close($ch); 
+                    $data = \json_decode($result2); 
+                    if ($data->error == "0") {
+                   $result="Message was successfully sent"; 
+                   
+                    }else{ 
+                    $result="Message failed to send. Error: " .  $data->error; 
+                     
+                    } 
+                     
+    
+                $date=time();
+                $user=  $_SESSION['ID'];
+                $term=$_SESSION[term];
+                $year=$_SESSION[year];
+                $query=$this->connect->Prepare("INSERT INTO `tbl_sms` ( `number`, `message`, `status`, `dates`, `type`, `name`, `term`, `year`, `sent_by`) VALUES ('$phone', '$message', '$result', '$date', 'results sms', '$receipient', '$term', '$year', '$user')");
+              //  print_r($query);
+                 return $this->connect->Execute($query);
+            }
+        
+    }
 }

@@ -31,7 +31,7 @@
 
        }
 	  else{
-		 $sql->Prepare("update tbl_courses set teacherId='$teacher' where name='$name' and classId='$classes'");
+		 $sql->Prepare("update tbl_courses set teacherId='$teacher' where name='$name' and classId='$classes' and year='$school->YEAR' and term='$school->TERM'");
 		 $sql->Execute($sql);
 		  
 		if ($result)  {header("location:assign_teachers.php?success=1");
@@ -43,6 +43,12 @@
 	  
 	  }
 	  }
+           if(isset($_GET[delete])){
+               $stmt = $sql->Prepare("UPDATE tbl_courses SET  teacherId=''   AND ID=" . $sql->Param('a') . "  ");
+            if ($sql->Execute($stmt, array($_GET['delete']))) {
+                header("location:assign_teachers.php?success=1");
+            }
+         }
  ?>
  <link href="vendors/bootgrid/jquery.bootgrid.min.css" rel="stylesheet">
  <script src="js/jquery.js"></script>
@@ -274,7 +280,7 @@ xmlhttp.send();
                       <?php 
                 global $sql;
  
-                      $query2=$sql->Prepare("SELECT DISTINCT name FROM tbl_courses");
+                      $query2=$sql->Prepare("SELECT DISTINCT  NAME  FROM tbl_courses");
 
 
                       $query=$sql->Execute( $query2);
@@ -364,44 +370,44 @@ xmlhttp.send();
                  if($_GET['subject']=="all"){
                      $end_query="";
                        }
-                 else{ $end_query="WHERE name='$_GET[subject]'   ";}
+                 else{ $end_query="AND name='$_GET[subject]'   ";}
                   }
                   elseif(isset($_GET['position'])){
                  if($_GET['position']=="all"){
                      $end_query="";
                        }
-                 else{ $end_query="WHERE position='$_GET[position]'   ";}
+                 else{ $end_query="AND position='$_GET[position]'   ";}
                   }
                   
                   elseif(isset($_GET['class'])){
                  if($_GET['class']=="all"){
                      $end_query="";
                        }
-                 else{ $end_query="WHERE classId='$_GET[class]'   ";}
+                 else{ $end_query="AND classId='$_GET[class]'   ";}
                   }
 				   elseif(isset($_GET['term'])){
                  if($_GET['term']=="all"){
                      $end_query="";
                        }
-                 else{ $end_query="WHERE term='$_GET[term]'   ";}
+                 else{ $end_query="AND term='$_GET[term]'   ";}
                   }
                   
                   elseif(isset($_GET['worker'])){
                  if($_GET['worker']=="all"){
                      $end_query="";
                        }
-                 else{ $end_query="WHERE teacherId='$_GET[worker]'   ";}
+                 else{ $end_query="AND teacherId='$_GET[worker]'   ";}
                   }
 				  elseif(isset($_GET['year'])){
                  if($_GET['year']=="year"){
                      $end_query="";
                        }
-                 else{ $end_query="WHERE year LIKE '%$_GET[year]%'   ";}
+                 else{ $end_query="AND year LIKE '%$_GET[year]%'   ";}
                   }
                    
                   
-				  $_SESSION[last_query]=  $query= $sql->Prepare( "SELECT * FROM `tbl_courses` $end_query ");
-                                               
+				  $_SESSION[last_query]=  $query= $sql->Prepare( "SELECT * FROM `tbl_courses` WHERE 1 AND year!='' and term!='' AND teacherId!='' $end_query ");
+                                   
 								 $rs = $sql->PageExecute($query,RECORDS_BY_PAGE,CURRENT_PAGE);
                                                       $recordsFound = $rs->_maxRecordCount;    // total record found
                                                      if (!$rs->EOF) 
@@ -421,7 +427,7 @@ xmlhttp.send();
                                     
                                     <th data-column-id="No of Students" data-order="asc" style="text-align:center">No of Students</th>
                                      
-                                    <th data-column-id="link" data-formatter="link" data-sortable="false"> </th>
+                                    <th data-column-id="link" data-formatter="link" data-sortable="false"> Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -438,8 +444,9 @@ xmlhttp.send();
                                     <td><?php  $teacher=new classes\Teacher(); $teacher=$teacher->getTeacher($rt[teacherId]);  echo $teacher->NAME." " .$teacher->SURNAME; ?></td>
                                     <td style="text-align:center"><?php  echo $rt[year] ?></td>
                                     <td style="text-align:center"><?php  echo $rt[term] ?></td>
-                                    <td style="text-align:center"><?php  echo $student->getTotalStudent_by_Class($rt[classId]); ?></td>
-                                    
+                                    <td style="text-align:center"><?php  echo $student->getTotalStudent_by_Class($rt[classId],$school->YEAR,$school->TERM); ?></td>
+                                    <td ><a  onclick="return confirm('Are you sure you want to delete this teacher from teaching this course??')"   href="assign_teachers.php?delete=<?php  echo $rt[id] ?> " ><span class="md md-delete"></span>   </a> 
+                                  
                                 
                                 
                                      </tr>

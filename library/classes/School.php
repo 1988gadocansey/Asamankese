@@ -31,7 +31,7 @@ class School {
                                 }
     }
     public function getAcademicYearTerm(){
-        $query=  $this->connect->Prepare("SELECT * FROM tbl_academic_year");
+        $query=  $this->connect->Prepare("SELECT * FROM tbl_academic_year ORDER BY ID DESC ");
         $stmt= $this->connect->Execute( $query);
        if($stmt->RecordCount() > 0){
 					

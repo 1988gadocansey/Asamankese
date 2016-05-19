@@ -16,8 +16,8 @@
         
         While($stmt=$rt->FetchRow()){
             $arrayphone=$stmt[phone];
-        
-        if($a=$sms->sendAdmitted($arrayphone, $_POST[message],$stmt[INDEXNO])){
+         
+        if($a=$sms->sendBulkSms($_POST[message],$arrayphone,$stmt[INDEXNO])){
             $_SESSION[last_query]="";
         
             header("location:viewworkers.php?success=1");

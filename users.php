@@ -165,7 +165,10 @@ xmlhttp.send();
                                                                        <option value='Data Entry clerk'>Data Entry clerk</option>
                                                                         <option value='Bursar'>Bursar</option>
                                                                          <option value='Administrator'>Administrator</option>
-                                                                           
+                                                                         <option value='Class Teacher'>Class Teacher</option>
+                                                                         <option value='Head Teacher'>Head Teacher</option>
+                                                                          <option value='House Master'>House Master</option>
+                                                                        
                                                                         
                                                              </select>
                                                              </div>

@@ -12,7 +12,7 @@
         $notify=new classes\Notifications();
         $app->gethead();
         $teacher_ob=new classes\Teacher();  $teacher=$teacher_ob->getTeacher_ID($_SESSION[ID]);
-        if($_GET[id]){
+        if(isset($_GET[id])){
         $_SESSION[rep]=$_GET[id];
         }
         $query=$sql->Prepare("SELECT  name,nextClass FROM tbl_classes order by name");		  
@@ -254,7 +254,7 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                                 </tr>
                             </thead>
                             <tbody>
-                          <form id="form1" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+     <form id="form1" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                                 <?php 
 //$_SESSION[currentterm]="";
 //include 'connect.php';
@@ -314,7 +314,7 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                    </select>
                    
                 </td>
-                <td ><select class=''  name='attitude[]'  onClick="beginEditing(this);" onBlur="finishEditing();"  >
+                <td><select class=''  name='attitude[]'  onClick="beginEditing(this);" onBlur="finishEditing();"  >
                         <option value=''>select attitude</option>
                                <?php 
                             global $sql;
@@ -334,7 +334,7 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                            <?php }?>
 
                    </select></td>
-                <td ><select name="interest[]" <?php if($teacher->USER_TYPE!="Teacher"){echo 'disabled="disabled"';}?>  onClick="beginEditing(this);" onBlur="finishEditing();">
+                <td><select name="interest[]" <?php if($teacher->USER_TYPE!="Teacher"){echo 'disabled="disabled"';}?>  onClick="beginEditing(this);" onBlur="finishEditing();">
                  <option value=''>select interest</option>
                                <?php 
                             global $sql;
@@ -355,7 +355,7 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
 
                 </select></td>
                  
-                <td ><label><strong>
+                <td><label><strong>
                   <select name="class_teacher[]" <?php if($teacher->USER_TYPE!="Teacher" ){echo 'disabled="disabled"';}?>  onClick="beginEditing(this);" onBlur="finishEditing();">
                  <option value=''>select class teacher's</option>
                                <?php 
@@ -376,8 +376,10 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                            <?php }?>
 
                 </select>
-                </strong></label></td>
-                <td><select name="head_teacher[]" <?php if($teacher->USER_TYPE!="Head Teacher" ){echo 'disabled="disabled"';}?>  onClick="beginEditing(this);" onBlur="finishEditing();">
+                </strong></label>
+                
+                </td>
+                <td><select name="head_teacher[]" <?php if($teacher->POSITION!="Head Teacher" || $teacher->USER_TYPE!="Teacher"  ){echo 'disabled="disabled"';}?>  onClick="beginEditing(this);" onBlur="finishEditing();">
                  <option value=''>select head teacher's</option>
                                <?php 
                             global $sql;
@@ -396,7 +398,9 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
 
                            <?php }?>
 
-                </select></td>
+                </select>
+             
+             </td>
                 <td><label>
                   <select name="promoted[]" <?php if($teacher->USER_TYPE!="Teacher" ){echo 'disabled="disabled"';}?>   >
                  <option value=''>select promotion</option>

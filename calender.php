@@ -14,15 +14,15 @@
         $notify=new classes\Notifications();
         $app->gethead();
 	 if(isset($_GET[add])){
-                 $tb=strtotime($_POST[tbegins]);
-                 $te=strtotime($_POST[tends]);
-		 if($te>$tb){
+                 $tb=$_POST[tbegins];
+                 $te=$_POST[tends];
+		 
 	 	 $query=$sql->Prepare("INSERT INTO tbl_academic_year(BEGINS,ENDS,TERM,YEAR)VALUES('$tb','$te','$_POST[term]','$_POST[year]')");
                
                  if($sql->Execute($query)){
                      header("location:calender.php?success=1");
                  }
-                 }
+                 
                  else{
                  header("location:calender.php?error=1");
                  }
@@ -272,8 +272,8 @@
                                     <td style="text-align:center"><?php  echo $rt[ID] ?></td>
                                     <td style="text-align:center"><?php  echo $rt[TERM] ?></td>
                                     <td style="text-align: "><?php  echo $rt[YEAR] ?></td>
-                                     <td style="text-align: "><?php  echo date("l jS \of F Y",$rt[BEGINS]) ?></td>
-                                    <td style="text-align: "><?php  echo date("l jS \of F Y",$rt[ENDS]) ?></td>
+                                     <td style="text-align: "><?php  echo  $rt[BEGINS] ?></td>
+                                    <td style="text-align: "><?php  echo  $rt[ENDS] ?></td>
                                     
                                     
                                 

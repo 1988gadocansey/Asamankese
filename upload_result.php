@@ -9,6 +9,20 @@ ini_set('display_errors', 0);
     $config = new classes\School();
     $school = $config->getAcademicYearTerm();
      
+
+    function getSub($code){
+        global $sql;
+        $query=$sql->Prepare("SELECT * FROM tbl_courses WHERE id='$code'");
+        $kk=$sql->Execute($query);
+        $row=$kk->FetchNextObject();
+        return $row->NAME;
+    }
+
+
+
+
+
+     
      
      $student=new classes\Student();
     $grade=new classes\Grades();
@@ -232,7 +246,7 @@ $app->gethead();
                                                          <label for="inputEmail3"    class="col-sm-2 control-label">Class</label>
                                                          <div class="col-sm-10">
                                                              <div class="fg-line">
-                                                                 <select class='' style="width:240px"   required="" name="class" onChange="getSubject(this.value)">
+                                                                 <select class='' style="width:240px"   required="" name="class" onChange="getSubject(this.valxue)">
                                                                      <option value=''>select class</option>
                                                                            
                                                                           <?php 
@@ -263,11 +277,10 @@ $app->gethead();
                                                              <div class="fg-line">
                                                                  <select class='form-control' style="width:240px"  id='subject'   name="subject"  >
                                                                      <option value=''>select subject</option>
-                                                                           
-                                                                                          <?php
+                                                                          <?php
                                                                      global $sql;
 
-                                                                     $query2 = $sql->Prepare("SELECT *  FROM   tbl_courses");
+                                                                     $query2 = $sql->Prepare("SELECT *  FROM   tbl_courses WHERE  year='$school->YEAR' and term='$school->TERM' AND teacherId!=''");
 
 
                                                                      $query = $sql->Execute($query2);
@@ -275,9 +288,7 @@ $app->gethead();
 
                                                                      while ($row = $query->FetchRow()) {
                                                                          ?>
-                                                                         <option value="<?php echo $row['id']; ?>" <?php if ($rows->SUBJECT_COMBINATIONS == $row['Combination']) {
-                                                                         echo "selected='selected'";
-                                                                     } ?>>  <?php echo $row['name']; ?></option>
+                                                                         <option value="<?php echo $row['id']; ?>" >  <?php echo $row['name'].'-'.$row['classId']; ?></option>
 
                                                                      <?php } ?>
                                                                       </select>
@@ -299,7 +310,7 @@ $app->gethead();
                                                                      <option value=''>Academic year</option>
                                                                            
                                                                         <?php
-                                                            for ($i = 2008; $i <= 4000; $i++) {
+                                                            for ($i = 2015; $i <=2017; $i++) {
                                                                 $a = $i - 1 . "/" . $i;
                                                                 ?>
                                                                 <option <?php if ($_SESSION[yesar] == $a) {

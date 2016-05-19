@@ -58,8 +58,11 @@
                           
                         </div>
                         <div align="center">
+                            <h4>Print single student here</h4>
+                            <hr>
                             <table align="center">
                                 <tr>
+                                    
                                     <td style=" ">
                             <select style="margin-left: 34px"     data-placeholder="search student by typing his indexno"  name="students" onchange="document.location.href='report_card.php?student='+escape(this.value);">
                                                          <option value=''>search student by typing his indexno</option>
@@ -85,6 +88,37 @@
                                 </tr>
                             </table>
                                     </div>
+                        <div align='center'>
+                            <h4>Print whole class here</h4>
+                            <hr>
+                            <table align="center">
+                                <tr>
+                                    
+                                    <td style=" ">
+                            <select style="margin-left: 34px"     name="students" onchange="document.location.href='bulk_report_card.php?class='+escape(this.value);">
+                                                         <option value=''>search class by typing class name</option>
+                                                           
+                                                                <?php 
+                                                          global $sql;
+                                                            
+                                                                $query2=$sql->Prepare("SELECT * FROM tbl_classes ");
+
+
+                                                                $query=$sql->Execute( $query2);
+
+
+                                                             while( $row = $query->FetchRow())
+                                                               {
+
+                                                               ?>
+                                                               <option value="<?php echo $row['name']; ?>"     >     <?php echo $row['name'] ?></option>
+
+                             <?php }?>
+                              </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                          
              
              

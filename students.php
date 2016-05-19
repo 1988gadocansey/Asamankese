@@ -17,7 +17,7 @@ if(isset($_POST[sms])){
         While($stmt=$rt->FetchRow()){
             $arrayphone=$stmt[GUARDIAN_PHONE];
         
-        if($a=$sms->sendAdmitted($arrayphone, $_POST[message],$stmt[INDEXNO])){
+        if($a=$sms->sendBulkSms($_POST[message],$arrayphone,$stmt[INDEXNO])){
             $_SESSION[last_query]="";
         
             header("location:students.php?success=1");
@@ -138,7 +138,7 @@ td{
                             <div style="margin-top:-3%;float:right">
                                 <a      class="btn btn-success waves-effect"   href="bulk_upload_students.php" >Upload Bulk Students<i class="md md-save"></i></a> 
                               
-                                 <button      class="btn bgm-lime waves-effect"  data-target="#sms"  data-toggle="modal">Send SMS<i class="md md-sms"></i></button> 
+                                 <button      class="btn bgm-lime waves-effect"  data-target="#sms"  data-toggle="modal">Send SMS to parents<i class="md md-sms"></i></button> 
                                 <a href="addStudent.php" title="add a student" class="btn bgm-orange waves-effect"> Add Student<i class="md md-add"></i></a>
                                  <button   class="btn btn-primary waves-effect waves-button dropdown-toggle" data-toggle="dropdown">Export Data<i class="md md-save"></i> </button>
                                         <ul class="dropdown-menu">
@@ -386,7 +386,7 @@ td{
                                 <?php
                                 $count=0;
                                     while($rt=$rs->FetchRow()){
-                                                            $count++;
+                                                            
                                        ?>
                                       <tr>
                                     <td><?php  echo $count; ?></td>
@@ -414,7 +414,7 @@ td{
                                     </td>  
                                 
                                      </tr>
-                                    <?php } ?>
+                                    <?php }$count++; ?>
                             </tbody>
             </table>
                         <br/>

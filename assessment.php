@@ -210,7 +210,7 @@
 
                    
                 $query= $sql->Prepare( "SELECT tbl_assesments.id as id,total, tbl_student.indexno as stid,tbl_student.surname as surname,tbl_student.othernames as othernames,test1,test2,test3,exam,comments,posInSubject,tbl_courses.name as subject,tbl_gradedefinition.grade as grade,tbl_courses.classId as form,tbl_assesments.year as year,tbl_assesments.term from tbl_student,tbl_assesments,tbl_courses,tbl_gradedefinition where  tbl_assesments.stuId=tbl_student.id and tbl_assesments.courseId=tbl_courses.id and lower <=total  and upper >= total $term $inse $ins $in ");
-                print_r($_SESSION[last_query]);
+                //print_r($_SESSION[last_query]);
                                               $rs = $sql->PageExecute($query,RECORDS_BY_PAGE,CURRENT_PAGE);
                                                       $recordsFound = $rs->_maxRecordCount;    // total record found
                                                      if (!$rs->EOF) 
@@ -226,12 +226,12 @@
                                     
                                      <th>No</th>
                                      <th data-column-id="Student" data-type=" " data-toggle="tooltip">Student</th>
-                                     <th data-column-id="Subject" data-type=" " data-toggle="tooltip">Subject</th>
+                                 <!--    <th data-column-id="Subject" data-type=" " data-toggle="tooltip">Subject</th>
                                     <th style="text-align:center" data-type="string" data-column-id="Class" style="text-align:center">Class</th>
                                    
                                     <th data-column-id="Academic Year" data-order="asc" style="text-align:center">Academic Year</th>
-                                    <th data-column-id="Term" style="text-align:center">Term</th>
-                                     <th data-column-id="Class Score">Class Score</th>
+                                    <th data-column-id="Term" style="text-align:center">Term</th> -->
+                                     <th data-column-id="Class Score" style="text-align:center">Class Score</th>
                                     <th data-column-id="Exam Score" data-order="asc" style="text-align:center">Exam Score</th>
                                      <th data-column-id="Total" data-order="asc" style="text-align:center">Total(30% of cw + 70% exam)</th>
                                      <th data-column-id="Grade" data-order="asc" style="text-align:center">Grade</th>
@@ -249,10 +249,10 @@
                                     
                                      <td><?php echo $count ?></td>
                                     <td style="text-align:left"><?php  echo $rtmt[surname].", ".$rtmt[othernames]; ?></td>
-                                    <td><?php echo $rtmt[subject] ?></td>
+                                    <!--<td><?php echo $rtmt[subject] ?></td>
                                     <td style="text-align:center"><?php echo $rtmt[form] ?></td>
                                     <td style="text-align:center"><?php echo $rtmt[year] ?></td>
-                                    <td style="text-align:center"><?php echo $rtmt[term] ?></td>
+                                    <td style="text-align:center"><?php echo $rtmt[term] ?></td>-->
                                     <td style="text-align:center"><?php echo $rtmt[test1]  ?></td>
                                     <td style="text-align:center"><?php echo $rtmt[exam] ?></td>
                                     <td style="text-align:center"> <?php echo ($rtmt[total]); ?> </td>

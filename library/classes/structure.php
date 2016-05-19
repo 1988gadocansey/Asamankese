@@ -65,6 +65,27 @@ class structure  extends skeleton{
 table.dataTable th.focus,table.dataTable td.focus{outline:3px solid #337ab7;outline-offset:-1px}
 
 </style>
+<script language="javascript" type="text/javascript">
+    function printDiv(divID) {
+        //Get the HTML of div
+        var divElements = document.getElementById(divID).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML = 
+          "<html><head><title></title></head><body>" + 
+          divElements + "</body>";
+
+        //Print Page
+        window.print();
+
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+
+
+    }
+</script>
     </head>
 
 
@@ -301,7 +322,8 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                                
                                     <li><a href='students.php'>View Students</a></li>
                                      
-                               
+                                     <li><a href='broadsheet.php'>Broadsheet</a></li>
+                                    
                                
                                      
                                
@@ -316,12 +338,20 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                                
                                
                                     <li><a href='print_exam_list.php'>Print Exams Attendance</a></li>
-                                     
+                                     <li><a href='broadsheet.php'>Broadsheet</a></li>
+                                    
                                
                                
-                                    <li><a href='reports.php'>Prepare Reports</a></li>
-                                     
-                                
+                                     <?php if($_SESSION['level']=='Head Teacher'){?>
+                                    <li><a href='headMasterR.php'>HeadMaster's Remark</a></li>
+                                        <?php }?>
+                                    <?php if($_SESSION['level']=='Class Teacher'){?>
+                                      <li><a href='classTeacherR.php'>Form masters's Remark</a></li>
+                                      <?php }?>
+                                      <?php if($_SESSION['level']=='House Master'){?>
+                                    <li><a href='houseMastersR.php'>House Master's Remark</a></li>
+                                   
+                                <?php }?>
                                     <li><a href='waec_list.php'>Print WAEC List</a></li>
                                      
                                

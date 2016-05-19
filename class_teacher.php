@@ -31,7 +31,7 @@
 			  }
 			  else{
 				  
-			 	header("location:class_teacher.php?error=1");
+			 	 header("location:class_teacher.php?error=1");
 				  }
 		  
 		  
@@ -81,9 +81,9 @@
                         <div class="table-responsive">
                              
                           <form id="form1" name="form1" method="post" action="class_teacher.php?sub=1">
-                          	 <table align="center" style="width:60%" class="table table-bordered table-vmiddle table-hover">
+                          	 <table align="center" style="width:60%" class="table table-striped table-vmiddle table-hover">
                                         <tr>
-                                          <td width="" border="0"></td>
+                                            <td>No</td>
                                           <td width=" " style="text-align:"> Class Name</td>
                                           <td width=" "> Teacher</td>
                                           </tr>
@@ -97,14 +97,14 @@
                                             
                                          
                                                 $b=$sql->Execute($query);
-                                                 
+                                                 $counter=0;
                                                 while( $r= $b->FetchRow())
                                                 
                                                 {
                                                    
                                                 ?>
 									      <tr>
-                                           <td><?php echo $thecounter=$counter++ ?></td>
+                                           <td><?php   $thecounter=$counter++ ;echo $thecounter?></td>
                                           <td>
 										  <?php echo $r[name];?>
                                             <input type="hidden" name="class[]" id="class" value="<?php echo $r[name];?>" />
