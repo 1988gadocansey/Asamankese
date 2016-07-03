@@ -44,6 +44,16 @@
     return $row->GUARDIAN_PHONE;
      
  }
+ function getShortCode($course) {
+    global $sql;
+     
+    $query1 = $sql->Prepare("SELECT shortcode FROM `tbl_subjects` where name='$course' ");
+    //print_r($query1);
+    $query = $sql->Execute($query1);
+
+    $row = $query->FetchNextObject();
+    return $row->SHORTCODE;
+  }
  function getCourse($courseId) {
     global $sql;
      
@@ -52,8 +62,9 @@
     $query = $sql->Execute($query1);
 
     $row = $query->FetchNextObject();
-    return $row->NAME;
+    return getShortCode($row->NAME);
   }
+
   function getCourseGrade($courseId,$year,$term,$student) {
     global $sql;
      
@@ -252,32 +263,19 @@
                     </tr>  
                 </form>
                 </table>
+                            &nbsp;
                              <table align="center">
                             <tr>
                             <form action="broadsheet.php" method="post" >
                       <td width="25%">
                           
                                                          
-                          <input type="text" name ="search" placeholder="search here"required="" style="margin-left:3px;  width:161% " class="form-control" id=" "  >
+                          <input type="text" name ="search" placeholder="search by index number"required="" style="margin-left:3px;width: 130px " class="form-control" >
                                                              
                       </td>
                       <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                      <td>&nbsp;</td>
-                       <td width="25%">
-                           <select class='form-control'  name='content' required="" style="margin-left:;  width:78% "  >
-                                         <option value=''>search by</option>
-                                        
-                                        <option value='SURNAME'<?php if($_SESSION[contents]=='SURNAME'){echo 'selected="selected"'; }?>>Surname</option>
-                                        <option value='OTHERNAMES'<?php if($_SESSION[statuss]=='OTHERNAMES'){echo 'selected="selected"'; }?>>Othernames</option>
-                                        <option value='INDEXNO'<?php if($_SESSION[statuss]=='INDEXNO'){echo 'selected="selected"'; }?>>Index No</option>
-                                         
-                                    </select>
-
-                      </td>
-                      <td>&nbsp;</td>
                       <td width="25%">
-                            <button type="submit" name="go" style="margin-left:%;width: 81px " class="btn btn-primary   btn-search">Search</button>
+                          <button type="submit" name="go" style="margin-left:%;width: 81px " class="btn btn-primary   btn-search">Search<i class="md md-search"></i></button>
                       </td>
                     </tr>  
                     
@@ -294,12 +292,14 @@
               
                 $class=$_SESSION[classes];
                 $term=$_SESSION[term];
+                 $search=$help->getID($_POST[search]);
                  
+                                            
                 $year=$_SESSION[year];
                 if($term=="All Terms" or $term==""){ $ter=""; }else {$ter=" and tbl_assesments.term = '$term' "  ;}
                   if($year=="All Years" or $year==""){ $ins=""; }else {$ins=" and tbl_assesments.year = '$year' "  ;}
                 if($class=="All Classes" or $class=="" ){ $in=""; }else {$in=" and tbl_assesments.class = '$class' "  ;}
-                if($search=="" ){ $search=""; }else {$search_="AND $content= '$search' "  ;}
+                if($search=="" ){ $search=""; }else {$search_=" AND stuId= '$search' "  ;}
 
                    if($_SESSION[term]==1){
                        $tt="1st Term";
@@ -338,8 +338,8 @@
                                 </tr>
                             </thead>
                             <?php
-                                $query11= $sql->Prepare( "SELECT DISTINCT tbl_assesments.stuId as stuId from tbl_assesments WHERE 1 $ter $inse $ins $in ORDER BY stuId ASC");
-                               //print_r($query11);             
+                                $query11= $sql->Prepare( "SELECT DISTINCT tbl_assesments.stuId as stuId from tbl_assesments WHERE 1 $ter $inse $ins $in $search_ ORDER BY stuId ASC");
+                              // print_r($query11);             
                                 $rs = $sql->PageExecute($query11,RECORDS_BY_PAGE,CURRENT_PAGE);
                                                       $recordsFound = $rs->_maxRecordCount;    // total record found
                                                      if (!$rs->EOF) 

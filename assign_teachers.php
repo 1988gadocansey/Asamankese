@@ -13,6 +13,20 @@
         $help=new classes\helpers();
         $notify=new classes\Notifications();
          $app->gethead();
+         if(isset($_POST['save'])){
+             $term=$_POST['term'];
+             $year=$_POST['year'];
+             $id=$_POST['key'];
+           
+             $counter=count($id);
+              for($i=1;$i<=$counter;$i++){
+              $query=$sql->Prepare("UPDATE tbl_courses SET year='$year[$i]',term='$term[$i]' WHERE id='$id[$i]'");
+             // print_r($query);
+              if($sql->Execute($query)){
+                  echo"<script>notify('Update completed') </script>";
+              }
+              }
+         }
 	 if(isset($_GET[add])==1){
 	   $name= $_POST[subject];
 	   $teacher= $_POST[teacher];
@@ -31,8 +45,8 @@
 
        }
 	  else{
-		 $sql->Prepare("update tbl_courses set teacherId='$teacher' where name='$name' and classId='$classes' and year='$school->YEAR' and term='$school->TERM'");
-		 $sql->Execute($sql);
+		$queryy= $sql->Prepare("update tbl_courses set teacherId='$teacher' where name='$name' and classId='$classes' and year='$school->YEAR' and term='$school->TERM'");
+		$result= $sql->Execute($queryy);
 		  
 		if ($result)  {header("location:assign_teachers.php?success=1");
 		
@@ -171,7 +185,7 @@ xmlhttp.send();
                                                              </div>
                                                          </div>
                                                      </div>
-                                                      <div class="form-group">
+                                                     <!-- <div class="form-group">
                                                          <label for="inputPassword3" class="col-sm-2 control-label">Teacher</label>
                                                          <div class="col-sm-10">
 
@@ -196,7 +210,7 @@ xmlhttp.send();
                                                     
                                                                    <?php }?>
                                                                             </select>
-                                                             </div>
+                                                             </div>-->
                                                          </div>
                                                      </div>
                                                       
@@ -299,30 +313,7 @@ xmlhttp.send();
             
             
         <td>&nbsp;</td>
-         <td width="20% ">
-
-                        <select class='form-control'    id='status' style="margin-left:% ;width:150px" onchange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?worker='+escape(this.value);">
-                            <option value=''>Filter by worker</option>
-                  	  <option value='all'>All</option>
-                      <?php 
-                    global $sql;
- 
-                      $query2=$sql->Prepare("SELECT * FROM tbl_workers WHERE designation='Teacher'");
-
-
-                      $query=$sql->Execute( $query2);
-                     
-                   
-                   while( $row = $query->FetchRow())
-                     {
-                       
-                     ?>
-                     <option value="<?php echo $row['emp_number']; ?>" ><?php echo $row['title']." ".$row['Surname']." ".$row['Name']; ?></option>
-
-               <?php }?>
-                        </select>
-
-                    </td>
+          
                        <td width="30%">
 
             <select class='form-control'  name='year'  style="  " onchange="document.location.href='<?php echo $_SERVER['PHP_SELF']; ?>?year='+escape(this.value);" >
@@ -408,13 +399,14 @@ xmlhttp.send();
                   
 				  $_SESSION[last_query]=  $query= $sql->Prepare( "SELECT * FROM `tbl_courses` WHERE 1 AND year!='' and term!='' AND teacherId!='' $end_query ");
                                    
-								 $rs = $sql->PageExecute($query,RECORDS_BY_PAGE,CURRENT_PAGE);
+								 $rs = $sql->PageExecute($query,40,CURRENT_PAGE);
                                                       $recordsFound = $rs->_maxRecordCount;    // total record found
                                                      if (!$rs->EOF) 
                                                      {
              ?>
             <p style="color:green"><center>Filter by (<?php echo $end_query;?>) Total records = <?php echo $total; ?></center></p>
                     <div class="table-responsive">
+                        <form action="" method="post" >
             <table   class="table table-striped table-vmiddle table-hover" >
                             <thead>
                                 <tr>
@@ -439,11 +431,38 @@ xmlhttp.send();
                                       <tr>
                                     <td><?php  echo $count; ?></td>
                                      <td><?php  echo $rt[name]; ?></td>
-                                     
+                            <input type="hidden" name="key[]"value="<?php  echo $rt[id]; ?>"/>
                                     <td style="text-align:center"><?php  echo $rt[classId]; ?></td>
                                     <td><?php  $teacher=new classes\Teacher(); $teacher=$teacher->getTeacher($rt[teacherId]);  echo $teacher->NAME." " .$teacher->SURNAME; ?></td>
-                                    <td style="text-align:center"><?php  echo $rt[year] ?></td>
-                                    <td style="text-align:center"><?php  echo $rt[term] ?></td>
+                                    <td style="text-align:center">
+                                        <select required="" name="year[]">
+                                         <option >select year</option>
+                                            <?php
+							 	for($i=2008; $i<=date("Y"); $i++){
+									$a=$i - 1 ."/". $i;
+										 ?>
+                                                                                   <option <?php if($rt[year]==$a){echo "selected='selected'";} ?> value='<?php echo $a ?>'><?php echo $a ?></option>
+                                                                                 <?php
+									
+									}
+							 
+							 
+							 ?>
+                
+                                             </select>
+                                        
+                                    </td>
+                                    <td style="text-align:center">
+                                        <select name='term[]' required="">
+                                         <option value=''>Filter by term</option>
+                                            
+                                                <option <?php if($rt[term]=='1'){echo "selected='selected'";} ?> value='1'>1</option>
+                                                <option <?php if($rt[term]=='2'){echo "selected='selected'";} ?> value='2'>2</option>
+                                                <option <?php if($rt[term]=='3'){echo "selected='selected'";} ?> value='3'>3</option>
+                                                
+                                           
+                                        </select>
+                                    </td>
                                     <td style="text-align:center"><?php  echo $student->getTotalStudent_by_Class($rt[classId],$school->YEAR,$school->TERM); ?></td>
                                     <td ><a  onclick="return confirm('Are you sure you want to delete this teacher from teaching this course??')"   href="assign_teachers.php?delete=<?php  echo $rt[id] ?> " ><span class="md md-delete"></span>   </a> 
                                   
@@ -453,7 +472,11 @@ xmlhttp.send();
                                     <?php } ?>
                             </tbody>
                          </table>
-                    
+                             <div class=" " style="margin-left:641px" >
+                                    <button  name="save" type="submit" class="btn btn-primary">update</button>
+                                    
+                                </div>
+                        </form>
                     <center><?php
                      
                          $GenericEasyPagination->setTotalRecords($recordsFound);

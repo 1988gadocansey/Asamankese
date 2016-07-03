@@ -41,6 +41,8 @@
         background-color: #EAF2D3;
         padding: 3px 7px 2px;
     }
+   
+
 </style>
 </head>
 <body>
@@ -77,7 +79,7 @@
     }
      
     ?>
-   
+    <div>
     <table align="center"  >
         <tr>
             <td><img src="images/logo1.png" style="width:90px;height: auto"/></td>
@@ -162,7 +164,7 @@
                    
                 <?php echo$row->POSITION; ?>
                 </div></td>
-                </div></td>
+                 </td>
                 
             </tr>
      </table></center>
@@ -292,7 +294,7 @@
           </tfoot>
 
       </table>
-    </div></th>
+     </th>
   </tr>
   <tr>
     <th valign="top" scope="row">      <hr/>
@@ -355,9 +357,15 @@
     </table></th>
   </tr>
 </table>
-    <?php }?>
-<div align="center"><small>Powered by DEK IT Consult(Softbox) | Elmina-Cape Coast C/R Tel:+244505284060,+233241999094 www.dekITC.com</small></div>
-    <script>
+   
+<div align="center"><small>Powered by Gadeksystems(Softbox) www.gadeksystems.com| Cape Coast C/R Tel:+244505284060,+233241999094 www.dekITC.com</small></div>
+        
+        
+        </div> 
+    <br clear="all" style="page-break-before: always"/>
+   <?php }?>
+</body>      
+<script>
     window.print();
     </script>
-</body>
+</html> 

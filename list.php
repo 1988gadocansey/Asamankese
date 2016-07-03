@@ -33,6 +33,7 @@
             ////////////////////////////////////////////////////////////////
            $count=$_POST[upper];
            $student_id=$_POST[stuid];
+           $id=$_POST[id];
            $indexno=$_POST[indexno];
            $test1=$_POST[q1];
            $test2=$_POST[q2];
@@ -45,6 +46,7 @@
            for($i=0;$i<$count;$i++){
                // getting each array
                 $student_id_=$student_id[$i];
+                $id_=$id[$i];
                 $indexno_=$indexno[$i];
                 $grade_value_=$grade_value[$i];
                 $comment_=$comment[$i];
@@ -60,7 +62,7 @@
 	       //first select the total of total scores of all scores in all subject in that year
                 
                     $stmt1=$sql->Prepare("select sum(total) as total from tbl_assesments where stuId='$student_id_' and year='$school->YEAR' and term='$school->TERM'");
-                  //  print_r($stmt1);
+                   //print_r($stmt1);
                     $a=$sql->Execute($stmt1);
                     
                      $row=$a->FetchRow() ;
@@ -72,8 +74,8 @@
                         
                     
                     
-                    $rtmt=$sql->Prepare("UPDATE tbl_assesments SET test1='$test1_',test2='$test2_',test3='$test3_',exam='$exam_',total='$total',comments='$comment_' , grade='$grade_value_' ,entered_by='$_SESSION[ID]' WHERE id='$student_id_'") ;
-                    
+                    $rtmt=$sql->Prepare("UPDATE tbl_assesments SET test1='$test1_',test2='$test2_',test3='$test3_',exam='$exam_',total='$total',comments='$comment_' , grade='$grade_value_' ,entered_by='$_SESSION[ID]' WHERE id='$id_'") ;
+                   // print_r($rtmt);
                     $sql->Execute($rtmt);
            }
                     ////////////////////////////////////////////////////////////

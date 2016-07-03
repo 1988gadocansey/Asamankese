@@ -11,7 +11,7 @@
     $notify=new classes\Notifications();
     $teacher=new classes\Teacher();
     if(isset($_GET[add])==1){
-        $class=$_POST['class'];
+       /*$class=$_POST['class'];
        $term=$_POST[term];
        $year=$_POST[year];
        $subject=$_POST[subject];
@@ -27,7 +27,44 @@
           
             
         }
-        header("location:open_term.php?success=1");
+        header("location:open_term.php?success=1");*/
+         $term = $school->TERM;
+         $year = $school->YEAR;
+        $query2=$sql->Prepare("SELECT * FROM tbl_classes");
+                                                    
+                                                    
+         $query=$sql->Execute( $query2);
+                                                                         
+                                                                       
+        while( $row = $query->FetchRow())
+         {
+                    $class=$row['name']; // class to assessment sheet
+                    $queryC=$sql->Prepare("SELECT * FROM `tbl_courses` WHERE classId='$class' AND year='$year' AND term='$term' AND teacherId!=''");
+                    print_r($queryC);  
+                    $output=$sql->Execute( $queryC);
+                    while( $col = $output->FetchRow()){ 
+                        
+                    $subject=$col['id']; //subject to assesment sheet
+                        
+                    $querys=$sql->Prepare("SELECT * FROM tbl_student WHERE CLASS='$class' AND STATUS LIKE '%In School%'");
+         
+                    $rtmt=$sql->Execute($querys);
+                    
+                    while( $rows = $rtmt->FetchRow()){
+                        $student=$rows['ID'];// to assessment table
+                        
+                        
+                        $insert_sql = $sql->Prepare("insert into tbl_assesments(courseId,stuId,class,year,term) values('$subject', '$student', '$class', '$year', '$term')");
+            
+                        $sql->Execute($insert_sql);
+          
+                        
+                    }
+
+                    
+                 }
+         }
+         header("location:open_term.php?success=1");
     }
      
      $app->gethead();
@@ -56,121 +93,26 @@
                     
                     <div class="card">
                         
-                         <div class="card-header">
-                           <p>
-                              Mount Subjects for new Term 
+                         <div class="card-header" align='center'>
+                           <p align='center'>
+                           <h5>PLEASE BEFORE YOU CLICK THE OPEN TERM BUTTON MAKE SURE YOU SET YOUR</h5> <br/>
+                           <h6> 1.ACADEMIC YEAR AND TERM</h6><br/>
+                           <h6> 2.SET TEACHERS TO THEIR RESPECTIVE SUBJECTS IN EVERY CLASS</h6><br/>
+                           <h6>3.PLEASE CHECK THIS THINGS BEFORE</h6><br/>
+                           </h5>
                             </p>
                          </div>
                         <form action="open_term.php?add=1" method="POST" class="form-horizontal" role="form">
-                                                 <div class="card-body card-padding">
-                                                     <div class="form-group">
-                                                         <label for="inputEmail3"    class="col-sm-2 control-label">Class</label>
-                                                         <div class="col-sm-10">
-                                                             <div class="fg-line">
-                                                                 <select class='' style="width:240px"   required="" name="class" onChange="getSubject(this.value)">
-                                                                     <option value=''>select class</option>
-                                                                           
-                                                                          <?php 
-                                                                    global $sql;
-                                                     
-                                                                          $query2=$sql->Prepare("SELECT * FROM tbl_classes");
-                                                    
-                                                    
-                                                                          $query=$sql->Execute( $query2);
-                                                                         
-                                                                       
-                                                                       while( $row = $query->FetchRow())
-                                                                         {
-                                                                           
-                                                                         ?>
-                                                                         <option value="<?php echo $row['name']; ?>"        ><?php echo $row['name']; ?></option>
-                                                    
-                                                                   <?php }?>
-                                                                            </select>
-                                                             </div>
-                                                         </div>
-                                                     </div>
-                                                     <div class="form-group">
-                                                         <label for="inputPassword3" class="col-sm-2 control-label">Subject</label>
-                                                         <div class="col-sm-10">
+                            <div class="card-body card-padding">
 
-                                                             <div class="fg-line">
-                                                                 <select class='form-control' style="width:240px"  id='subject'   name="subject"  >
-                                                                     <option value=''>select subject</option>
-                                                                           
-                                                                                          <?php
-                                                                     global $sql;
-
-                                                                     $query2 = $sql->Prepare("SELECT *  FROM   tbl_courses WHERE  year='$school->YEAR' and term='$school->TERM' AND teacherId!=''");
-
-
-                                                                     $query = $sql->Execute($query2);
-
-
-                                                                     while ($row = $query->FetchRow()) {
-                                                                         ?>
-                                                                         <option value="<?php echo $row['id']; ?>" <?php if ($rows->SUBJECT_COMBINATIONS == $row['Combination']) {
-                                                                         echo "selected='selected'";
-                                                                     } ?>>  <?php echo $row['name']; ?></option>
-
-                                                                     <?php } ?>
-                                                                      </select>
-                                                             </div>
-                                                         </div>
-                                                     </div>
-                                                      <div class="form-group">
-                                                         <label for="inputPassword3" class="col-sm-2 control-label">Academic year</label>
-                                                         <div class="col-sm-10">
-
-                                                             <div class="fg-line">
-                                                            <select class=''    required="" name="year" style="width:240px">
-                                                                     <option value=''>Academic year</option>
-                                                                           
-                                                                        <?php
-                                                            for ($i = 2008; $i <= 4000; $i++) {
-                                                                $a = $i - 1 . "/" . $i;
-                                                                ?>
-                                                                <option <?php if ($_SESSION[yesar] == $a) {
-                                                                echo 'selected="selected"';
-                                                            } ?>value='<?php echo $a ?>'><?php echo $a ?></option>";
-
-                                                            <?php } ?>
-
-
-                                                            ?>
-                                                                            
-                                                            </select>
-                                                             </div>
-                                                         </div>
-                                                     </div>
-                                                     
-                                                      <div class="form-group">
-                                                         <label for="inputPassword3" class="col-sm-2 control-label">Term</label>
-                                                         <div class="col-sm-10">
-
-                                                             <div class="fg-line">
-                                                                 <select class='form-control' style="width:240px"   required="" name="term" >
-                                                                    <option value=''>Filter by term</option>
-                                                                   <option value='all'>All</option>
-                                                                       <option value='1'>1</option>
-                                                                       <option value='2'>2</option>
-                                                                   <option value='3'>3</option>
-
-                                                               </select>
-                                                             </div>
-                                                         </div>
-                                                     </div>
-                                                      
-                                                 </div>
-                                             
-                                        
-                                <div class=" " style="margin-left:231px" >
-                                            <button name="save" type="submit" class="btn btn-primary">Save changes</button>
-                                            <button type="reset" class="btn btn-danger" data-dismiss="modal">Reset</button>
+                                <div class=" " style="margin-left:480px" >
+                                    <button onclick="return confirm('Are you sure you want to open this term as new term for entering mark?')" name="save" type="submit" class="btn btn-primary">Open new term</button>
+                                    
                                 </div>
-                            &nbsp;
-                                   </form>
-                    </div>
+                                &nbsp;
+                            </div>
+                        </form>
+                    
                 </div>
                 </div>
                      

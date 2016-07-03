@@ -1,13 +1,15 @@
  <?php
  ini_set('display_errors', 0);
-    require 'vendor/autoload.php';
-    include "library/includes/config.php";
-     include "library/includes/initialize.php";
-     $help = new classes\helpers();
+ require 'vendor/autoload.php';
+ include "library/includes/config.php";
+include "library/includes/initialize.php";
+ $help = new classes\helpers();
 $teacher2 = new classes\Teacher();
 $teacher = $teacher2->getTeacher_ID($_SESSION[ID]);
 $_SESSION[indexno]="";
 $instructor = $teacher2->getTeacher_Class($teacher->EMP_NUMBER);
+$school=new classes\School();
+$school=$school->getAcademicYearTerm();
 $sms=new classes\smsgetway();
 if(isset($_POST[sms])){
          $q=$_SESSION[last_query];
@@ -24,6 +26,28 @@ if(isset($_POST[sms])){
             
             }
         }
+    }
+    if(isset($_GET['promote'])){
+        $q=$_SESSION[last_query];
+        $query=$sql->Prepare($q);
+        $rt=$sql->Execute($query);
+        $resultSet=$rt->FetchNextObject();
+        $class=$resultSet->CLASS;
+         
+           
+            $query2 = $sql->Prepare("SELECT nextClass FROM tbl_classes WHERE name='$class'");
+    // print_r($query2);
+    $queryR = $sql->Execute($query2);
+    $rowSet = $queryR->FetchNextObject();
+    $nextclass = $rowSet->NEXTCLASS;
+
+
+    $query_ = $sql->Prepare("UPDATE tbl_student SET CLASS='$nextclass' WHERE CLASS='$class'");
+    // print_r($query_);
+    $sql->Execute($query_);
+
+
+    header("location:students.php?success=1");
     }
     if($_GET[program]){
         $_SESSION[program]=$_GET[program];
@@ -136,11 +160,22 @@ td{
 							Generate customised reports   send sms,edit students data here
                             </p>
                             <div style="margin-top:-3%;float:right">
+                                <?php
+                                    if($school->TERM==3){
+                                        ?>
+                                <a href="students.php?promote=1&&1" onclick="return confirm('Are you sure to perform this operation??')"title="add a student" class="btn bgm-orange waves-effect">Bulk Promote students<i class="md md-add"></i></a>
+                               
+                                <?php
+                                    }
+                                    
+                                
+                                ?>
                                 <a      class="btn btn-success waves-effect"   href="bulk_upload_students.php" >Upload Bulk Students<i class="md md-save"></i></a> 
                               
                                  <button      class="btn bgm-lime waves-effect"  data-target="#sms"  data-toggle="modal">Send SMS to parents<i class="md md-sms"></i></button> 
                                 <a href="addStudent.php" title="add a student" class="btn bgm-orange waves-effect"> Add Student<i class="md md-add"></i></a>
-                                 <button   class="btn btn-primary waves-effect waves-button dropdown-toggle" data-toggle="dropdown">Export Data<i class="md md-save"></i> </button>
+                               
+                                <button   class="btn btn-success waves-effect waves-button dropdown-toggle" data-toggle="dropdown">Export Data<i class="md md-save"></i> </button>
                                         <ul class="dropdown-menu">
                                             
                                             <li><a href="#" onClick ="$('#assesment').tableExport({type:'csv',escape:'false'});"><img src='img/icons/csv.png' width="24"/> CSV</a></li>
@@ -190,6 +225,7 @@ td{
                                     <select class='form-control'  name='subject'  style="width:150px;margin-left: -20px" onchange="document.location.href='<?php echo $_SERVER['PHP_SELF'] ?>?class='+escape(this.value);" >
                                 <option value=''>Filter by Class</option>
                                         <option value='All classes'>All Classes </option>
+                                         <option value='Alumni'>Completed </option>
                                     <?php 
                                       global $sql;
 
@@ -386,7 +422,7 @@ td{
                                 <?php
                                 $count=0;
                                     while($rt=$rs->FetchRow()){
-                                                            
+                                                 $count++;           
                                        ?>
                                       <tr>
                                     <td><?php  echo $count; ?></td>
@@ -414,7 +450,7 @@ td{
                                     </td>  
                                 
                                      </tr>
-                                    <?php }$count++; ?>
+                                    <?php } ?>
                             </tbody>
             </table>
                         <br/>

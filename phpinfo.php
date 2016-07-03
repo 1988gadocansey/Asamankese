@@ -34,10 +34,15 @@ ini_set('display_errors', 0);
               
             $col0 = $col[0];
             $col1 = $col[1];
+             $col2 = $col[2];
+            $col3 = $col[3];
+             $col4 = $col[4];
+            $col5 = $col[5];
+             $col6 = $col[6];
             
 
             // SQL Query to insert data into DataBase
-            $query = $sql->Prepare("UPDATE tbl_student SET GUARDIAN_PHONE='" . $col1 . "' WHERE INDEXNO='" . $col0 . "'");
+            $query = $sql->Prepare("INSERT INTO tpoly_students SET INDEXNO='" . $col0 . "',SURNAME='" . $col1 . "',FIRSTNAME='" . $col2 . "',NAME='" . $col3 . "',PROGRAMMECODE='" . $col4 . "',ADDRESS='" . $col5 . "',TELEPHONENO='" . $col6 . "' ");
             
             $a = $sql->Execute($query);
             if ($a) {
@@ -48,7 +53,7 @@ ini_set('display_errors', 0);
                  
             }
             else{
-                  header("location:bulk_upload_students.php?error=1");
+                 // header("location:bulk_upload_students.php?error=1");
             }
         }
 

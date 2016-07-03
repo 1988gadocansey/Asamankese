@@ -125,7 +125,7 @@ class Student {
 	 public function getTotalStudent_by_Class($class,$year,$term) {
           
        
-        $STM2 = $this->connect->Prepare("SELECT COUNT(*) AS TOTAL FROM tbl_class_members WHERE YEAR='$year' AND TERM='$term' AND CLASS='$class' ");
+        $STM2 = $this->connect->Prepare("SELECT COUNT(*) AS TOTAL FROM tbl_student WHERE STATUS LIKE '%In School%' AND CLASS='$class' ");
         $row= $this->connect->Execute($STM2);
         if($row){
          $a= $row->FetchNextObject();

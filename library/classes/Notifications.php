@@ -29,6 +29,13 @@ class Notifications {
                                 <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
                                Item exists already add a different one
                             </div>";}
+                            elseif(isset($_GET['prohibit']) && isset ($_GET['item'])){
+                         echo "<div class='alert alert-warning alert-dismissible' role='alert'>
+                                <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                               You cannot delete this $_GET[item] item because it contains data. <br/>Eg. if is a class you are deleting and you
+                                   get this message it means some students are in the class you want to delete so <br/>
+                                   first go and change the class of those students before the system will allow deleting this class.
+                            </div>";}
          elseif(isset($_GET['success'])){
              echo ("<div class='alert alert-success alert-dismissible' role='alert'>
                                 <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>

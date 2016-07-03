@@ -591,7 +591,7 @@ $(document).ready(function(){
     
     //Welcome Message (not for login page)
     if (!$('.login-content')[0]) {
-        notify('Welcome to Naraguta', 'inverse');
+        notify('Welcome to Asamankese SHS!!!!!!!!', 'success');
     }
 
     /*
