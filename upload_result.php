@@ -82,14 +82,20 @@ ini_set('display_errors', 0);
                 //update students total score in that class for that year inside the class records which is == to the total of all scores in all courses taken in that year
 	       //first select the total of total scores of all scores in all subject in that year
                 
-                    $stmt1=$sql->Prepare("select sum(total) as total from tbl_assesments where stuId='$studentID' and year='$school->YEAR' and term='$school->TERM'");
+                    $stmt1=$sql->Prepare("select sum(total) as total,class from tbl_assesments where stuId='$studentID' and year='$school->YEAR' and term='$school->TERM'");
                     
                     $a=$sql->Execute($stmt1);
                     
                     while($row=$a->FetchRow()){
-             
-                        $stmt=$sql->Prepare("update tbl_class_members set total='$total' where STUDENT='$indexno' and  year='$school->YEAR' and term='$school->TERM'")  ;
-                    
+                         $queryIn=$sql->Prepare("SELECT * from tbl_class_members WHERE year='$school->YEAR' AND term='$school->TERM' AND STUDENT='$indexno'");
+                        $outputQuery=$sql->Execute($queryIn);
+                        if($outputQuery->RecordCount()==1){
+                        $stmt=$sql->Prepare("update tbl_class_members set total='$row[total]' where STUDENT='$indexno' and  year='$school->YEAR' and term='$school->TERM'")  ;
+                        }
+                        else{
+                             $stmt=$sql->Prepare("INSERT INTO tbl_class_members set total='$row[total]' , STUDENT='$indexno' , year='$school->YEAR' , term='$school->TERM',class='$row[class]'")  ;
+                      
+                        }
                         $sql->Execute($stmt);
                     
                         
@@ -151,7 +157,9 @@ ini_set('display_errors', 0);
 
                           $po=$in."/".$row;
                          //echo "_";
-                          $in_=$sql->Prepare("update tbl_class_members  set position ='$po' where student='$r[student]'");
+                          
+                          
+                          $in_=$sql->Prepare("update tbl_class_members  set position ='$po' where student='$r[student]' where student='$r[student]' AND year='$school->YEAR' and term='$school->TERM'");
                           $sql->Execute($in_);
                           header('location:upload_result.php?success=1');
                 

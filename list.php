@@ -61,14 +61,24 @@
                 //update students total score in that class for that year inside the class records which is == to the total of all scores in all courses taken in that year
 	       //first select the total of total scores of all scores in all subject in that year
                 
-                    $stmt1=$sql->Prepare("select sum(total) as total from tbl_assesments where stuId='$student_id_' and year='$school->YEAR' and term='$school->TERM'");
+                    $stmt1=$sql->Prepare("select sum(total) as total,class from tbl_assesments where stuId='$student_id_' and year='$school->YEAR' and term='$school->TERM'");
                    //print_r($stmt1);
                     $a=$sql->Execute($stmt1);
                     
                      $row=$a->FetchRow() ;
              	 
-                        $stmt=$sql->Prepare("update tbl_class_members set total='$row[total]' where STUDENT='$indexno_' and  year='$school->YEAR' and term='$school->TERM'")  ;
-                   // print_r($stmt);
+                        $queryIn=$sql->Prepare("SELECT * from tbl_class_members WHERE year='$school->YEAR' AND term='$school->TERM' AND STUDENT='$indexno_'   ");
+                       // print_r($queryIn);
+                        $outputQuery=$sql->Execute($queryIn);
+                        if($outputQuery->RecordCount()==1){
+                            $stmt=$sql->Prepare("update tbl_class_members set total='$row[total]' where STUDENT='$indexno_' and  year='$school->YEAR' and term='$school->TERM'")  ;
+                 
+                        }
+                        else{
+                            $stmt=$sql->Prepare("INSERT INTO tbl_class_members set total='$row[total]', STUDENT='$indexno_' , year='$school->YEAR' , term='$school->TERM',class='$row[class]'")  ;
+                 
+                        }
+                          // print_r($stmt);
                        $sql->Execute($stmt);
                     
                         
@@ -109,7 +119,7 @@
                      /////////////////////////////////////////////////////////////////////////
                      
                         $input1=$sql->Prepare("SELECT id,total,student from tbl_class_members where class='".$session->get('CLASS')."' and year='$school->YEAR' and term='$school->TERM' ORDER BY total desc");
-                    
+                        
                         $input_=$sql->Execute($input1);
                      
                         $inde=0;
@@ -124,19 +134,20 @@
 
                           $po=$in."/".$row;
                          //echo "_";
-                          $in_=$sql->Prepare("update tbl_class_members  set position ='$po' where student='$r[student]'");
+                          $in_=$sql->Prepare("update tbl_class_members  set position ='$po' where student='$r[student]' AND year='$school->YEAR' and term='$school->TERM'");
+                          //print_r($in_);
                           $sql->Execute($in_);
 
                       }
       
-               
+            echo "<script>alert('Please click the reculculate button down. is very important')</script>";
            
           }
           
           //////////////////////////////////////////////////////////////////////
           // upload excel csv result starts here  ie using the parsecsv library//
           //////////////////////////////////////////////////////////////////////
-
+          
 	  
  ?>
  <link href="vendors/bootgrid/jquery.bootgrid.min.css" rel="stylesheet">
@@ -228,7 +239,7 @@
                             <table align="center" style="margin-top:9px" border="0">
                                 <tr>
                               <td>
-                                  Total Student = <?php echo $student->getTotalStudent_by_Class($session->get("CLASS"),$school->YEAR,$school->TERM) ?> &nbsp;| &nbsp; 
+                                  Total Student = <?php echo $student->getTotalStudent_by_Class($_GET['class'],$school->YEAR,$school->TERM) ?> &nbsp;| &nbsp; 
                               </td>
                               <td>
                                   &nbsp;Total Male = <?php echo $student->getTotalStudent_by_gender("Male",$session->get("CLASS"))?> 
@@ -336,7 +347,7 @@
                                     <input  type="submit" name="submit" id="submit" class="btn btn-success" value="Save"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     </label>
                                      <label>
-                                    <input  type="submit" name="submit" id="submit" class="btn btn-primary btn-sm" value="Update Records"/>
+                                    <input  type="submit" name="submit" id="submit" class="btn btn-primary btn-sm" value="Recalculate Grade"/>
                                     </label>
                                  <!-- <label>
                                     <input type="submit" name="button" id="button" class="btn btn-warning btn-lg" value="RESET" />

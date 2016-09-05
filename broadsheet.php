@@ -102,7 +102,7 @@
           
 			 $phone=getPhone($students[$i]);
 			
-			 $message="Hi Guildian these are the performances of your ward  ".$help->getName($students[$i])." Form:".$class." Term:".$term." Grades: ".rtrim($datascore[$students[$i]],',');
+			 $message="Result for ".$help->getName($students[$i])." Form:".$class." Term:".$term." Grades: ".rtrim($datascore[$students[$i]],',');
                         //print_r($message);
                          $name=$help->getName($students[$i]);
                           $help->firesms($message, $phone, $name) ;
@@ -238,7 +238,7 @@
                                          <option value=''>Filter by academic year</option>
                                         
                                              <?php
-                                                                            for($i=2008; $i<=date("Y"); $i++){
+                                                                            for($i=2015; $i<=date("Y"); $i++){
                                                                                     $a=$i - 1 ."/". $i;?>
                                                                                              <option <?php if($_SESSION[year]==$a){echo 'selected="selected"'; }?>value='<?php echo $a ?>'><?php echo $a ?></option>";
                                                                              

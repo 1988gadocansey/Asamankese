@@ -60,11 +60,12 @@
                         <div align="center">
                             <h4>Print single student here</h4>
                             <hr>
+                            <form action="report_card.php" method="POST">
                             <table align="center">
                                 <tr>
                                     
                                     <td style=" ">
-                            <select style="margin-left: 34px"     data-placeholder="search student by typing his indexno"  name="students" onchange="document.location.href='report_card.php?student='+escape(this.value);">
+                                        <select style="margin-left: 34px"   required=""  data-placeholder="search student by typing his indexno"  name="student" >
                                                          <option value=''>search student by typing his indexno</option>
                                                            
                                                                 <?php 
@@ -85,17 +86,59 @@
                              <?php }?>
                               </select>
                                     </td>
+                                 
+                                      <td>&nbsp;</td>
+                 <td width="20%">
+
+                     <select class='' required="" name='term'  style="margin-left:-25%;  " >
+                             <option value=''>Filter by term</option>
+                            <option value='all'>All</option>
+                  	        <option value='1'>1</option>
+                      		<option value='2'>2</option>
+                            <option value='3'>3</option>
+                
+                        </select>
+
+         </td>
+         <td>&nbsp;</td>
+          <td width="30%">
+
+              <select class='' required="" name='year'    >
+                             <option value=''>Filter by academic year</option>
+                            <option value='all'>All</option>
+                  	         <?php
+							 	for($i=1990; $i<=date("Y"); $i++){
+									$a=$i - 1 ."/". $i;
+										echo "<option value='$a'>$a</option>";
+									
+									}
+							 
+							 
+							 ?>
+                
+                        </select>
+
+         </td>
                                 </tr>
+                                 
+                                
+                                    
+                                 
                             </table>
+                                <center><button type="submit" class="btn btn-primary btn-sm m-t-10">Print Single</button></center>
+                         
+                        </form>
                                     </div>
+                        <p>&nbsp;</p>
                         <div align='center'>
                             <h4>Print whole class here</h4>
                             <hr>
+                            <form action="bulk_report_card.php" method="POST">
                             <table align="center">
                                 <tr>
                                     
                                     <td style=" ">
-                            <select style="margin-left: 34px"     name="students" onchange="document.location.href='bulk_report_card.php?class='+escape(this.value);">
+                                        <select style="margin-left: 34px"   required=""  name="class" >
                                                          <option value=''>search class by typing class name</option>
                                                            
                                                                 <?php 
@@ -116,8 +159,43 @@
                              <?php }?>
                               </select>
                                     </td>
+                                                   <td>&nbsp;</td>
+                 <td width="20%">
+
+            <select class=''  name='term'  style="margin-left:-25%;  " >
+                             <option value=''>Filter by term</option>
+                            <option value='all'>All</option>
+                  	        <option value='1'>1</option>
+                      		<option value='2'>2</option>
+                            <option value='3'>3</option>
+                
+                        </select>
+
+         </td>
+         <td>&nbsp;</td>
+          <td width="30%">
+
+              <select class='' required="" name='year'    >
+                             <option value=''>Filter by academic year</option>
+                            <option value='all'>All</option>
+                  	         <?php
+							 	for($i=1990; $i<=date("Y"); $i++){
+									$a=$i - 1 ."/". $i;
+										echo "<option value='$a'>$a</option>";
+									
+									}
+							 
+							 
+							 ?>
+                
+                        </select>
+
+         </td>
                                 </tr>
                             </table>
+                                 <center><button type="submit" name="bulk" class="btn btn-primary btn-sm m-t-10">Bulk print</button></center>
+                         
+                            </form>
                         </div>
                          
              

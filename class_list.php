@@ -222,7 +222,7 @@
                   
                   if($_SESSION[level]=='Administrator'){  
                   
-				   $query= $sql->Prepare( "SELECT * FROM tbl_courses   WHERE     year='$school->YEAR' and term='$school->TERM' $end_query");
+				   $query= $sql->Prepare( "SELECT * FROM tbl_courses  as c  WHERE     c.year='$school->YEAR' and c.term='$school->TERM' $end_query");
                  
                   }
                   else{

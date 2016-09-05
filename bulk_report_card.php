@@ -9,6 +9,12 @@
          $config=$school3->getConfig();
 	 $student=new classes\Student();
          $app=new classes\structure();
+          $thisterm = $_POST[term];
+    $thisyear = $_POST[year];
+    $yearData=$_POST[year];
+    $termData=$_POST[term];
+   $classData=$_POST["class"];
+    //$studentNo=$help->getIndex($studentData);
          $studentNo=$help->getIndex($stud[$i]);
          $notify=new classes\Notifications();
          $teacher=new classes\Teacher();   
@@ -48,9 +54,8 @@
 <body>
     <?php
       $ttotal=0;
-     $thisterm = $school->TERM;
-    $thisyear = $school->YEAR;
-    $query3 = $sql->Prepare("Select *,tbl_class_members.class as stage, tbl_class_members.student from tbl_student,tbl_classes,tbl_class_members where tbl_class_members.class='$_GET[class]'  and tbl_class_members.student=tbl_student.indexno and tbl_classes.name=tbl_student.class and tbl_class_members.year='$thisyear' and tbl_class_members.term='$thisterm' ");
+     
+    $query3 = $sql->Prepare("Select *,tbl_class_members.class as stage, tbl_class_members.student from tbl_student,tbl_classes,tbl_class_members where tbl_class_members.class='$classData'  and tbl_class_members.student=tbl_student.indexno and tbl_classes.name=tbl_student.class and tbl_class_members.year='$thisyear' and tbl_class_members.term='$thisterm' ");
  
     $result3 = $sql->Execute($query3);
     
@@ -70,12 +75,12 @@
    // print_r($query);
     $result = $sql->Execute($query);
     $row = $result->FetchNextObject();
-    $term = ($school->YEAR) % 3;
+    $term = ($yearData) % 3;
     $newterm = ++$term;
     if ($newterm == 1) {
-        $newyear = $help->nextyear($school->YEAR);
+        $newyear = $help->nextyear($yearData);
     } else {
-        $newyear = $school->YEAR;
+        $newyear = $yearData;
     }
      
     ?>
@@ -84,7 +89,7 @@
         <tr>
             <td><img src="images/logo1.png" style="width:90px;height: auto"/></td>
             <td style="text-align: center;text-transform: uppercase;width: 460px"><h4>Asamankese Senior High School<br/>
-              P.O.BOX 110, Asamankese E/R<br/>Tel:</h4>
+              P.O.BOX 110, Asamankese E/R<br/>Tel:<?PHP  echo $config->SCHOOL_TELEPHONE;?></h4>
                 <hr style="color:black">
       </td>
              <td valign="baseline"><img <?php echo $help->picture("studentPhotos/$row->INDEXNO.jpg",120)?> style="margin-left: 103px" src="<?php echo "studentPhotos/$studentNo.jpg" ?>" alt="" /></td>
@@ -108,17 +113,17 @@
                  <td>&nbsp;</td>
                  
                 <td  colspan=""><div align="left"><span class="rp">TERM</span> : 
-                <?php echo$school->TERM; ?>
+                <?php echo$termData; ?>
                 </div></td>
                  <td>&nbsp;</td>
                  
                 <td  colspan=""><div align="left"><span class="rp">CLOSING DATE</span> : 
                  <?php
-                    $terms=$sql->Prepare("select ENDS from tbl_academic_year where year='$school->YEAR' and term='$school->TERM'");
-                    //print_r($terms);
+                    $terms=$sql->Prepare("select ENDS from tbl_academic_year where year='$yearData' and term='$termData'");
+                     //print_r($terms);
                     $tterms=$sql->Execute($terms);
                      while($y=$tterms->FetchRow()){
-                     echo   date('d/m/Y',$y[ENDS]);
+                     echo    $y[ENDS] ;
                      }
                      ?>
                 </div></td>
@@ -126,7 +131,7 @@
             </tr>
              <tr>
                  <td  colspan=""><div align="left"><span class="rp">YEAR</span> : 
-                <?php echo strtoupper($school->YEAR); ?>
+                <?php echo strtoupper($yearData); ?>
                 </div></td>  
                  <td>&nbsp;</td>
                  
@@ -137,17 +142,17 @@
                  
                 <td  colspan=""><div align="left"><span class="rp">REOPENING</span> : 
                  <?php
-                    $terms=$sql->Prepare("select ENDS from tbl_academic_year where year='$school->YEAR' and term='$school->TERM'");
+                    $terms=$sql->Prepare("select BEGINS from tbl_academic_year ORDER BY ID DESC");
                     //print_r($terms);
                     $tterms=$sql->Execute($terms);
-                     while($y=$tterms->FetchRow()){
-                     echo   date('d/m/Y',$y[ENDS]);
-                     }
+                    $termss=$tterms->FetchNextObject();
+                     
+                     echo    $termss->BEGINS ;
+                     
                      ?>
                 </div></td>
                 
             </tr>
-            
             
                 <tr>
                  <td  colspan=""><div align="left"><span class="rp">PROGRAMME</span> : 
@@ -190,7 +195,7 @@
             <?php 
 		  
 		 
-		$stmt22=$sql->Prepare("select * from tbl_assesments,tbl_courses,tbl_subjects where tbl_assesments.stuId='".$help->getID($stud[$i])."' and tbl_assesments.year='$school->YEAR' and tbl_assesments.term='$school->TERM' and tbl_assesments.courseId=tbl_courses.id and tbl_subjects.name=tbl_courses.name and tbl_subjects.type='core' order by tbl_subjects.type ASC,tbl_subjects.name ASC");
+		$stmt22=$sql->Prepare("select * from tbl_assesments,tbl_courses,tbl_subjects where tbl_assesments.stuId='".$help->getID($stud[$i])."' and tbl_assesments.year='$yearData' and tbl_assesments.term='$termData' and tbl_assesments.courseId=tbl_courses.id and tbl_subjects.name=tbl_courses.name and tbl_subjects.type='core' order by tbl_subjects.type ASC,tbl_subjects.name ASC");
 		 
                 $stmt21=$sql->Execute($stmt22);
                 $t=$stmt21->RecordCount();
@@ -232,7 +237,7 @@
      <?php 
 		  
 		  
-		$stmt2=$sql->Prepare("select * from tbl_assesments,tbl_courses,tbl_subjects where tbl_assesments.stuId='".$help->getID($stud[$i])."' and tbl_assesments.year='$school->YEAR' and tbl_assesments.term='$school->TERM' and tbl_assesments.courseId=tbl_courses.id and tbl_subjects.name=tbl_courses.name and tbl_subjects.type='elective' order by tbl_subjects.type ASC,tbl_subjects.name ASC");
+		$stmt2=$sql->Prepare("select * from tbl_assesments,tbl_courses,tbl_subjects where tbl_assesments.stuId='".$help->getID($stud[$i])."' and tbl_assesments.year='$yearData' and tbl_assesments.term='$termData' and tbl_assesments.courseId=tbl_courses.id and tbl_subjects.name=tbl_courses.name and tbl_subjects.type='elective' order by tbl_subjects.type ASC,tbl_subjects.name ASC");
 		  
                 $stmt3=$sql->Execute($stmt2);
                 $ttt=$stmt3->RecordCount();
@@ -304,7 +309,7 @@
         <td width="291" height="47"><div align="left"><span class="rp">ATTENDANCE</span>:
           <?php 
 		
-		 $stmt1=$sql->Prepare("select * from tbl_class_members where student='$stud[$i]' and year='$school->YEAR' and term='$school->TERM'");
+		 $stmt1=$sql->Prepare("select * from tbl_class_members where student='$stud[$i]' and year='$yearData' and term='$termData'");
                   
                  $stmt=$sql->Execute($stmt1);
                 $t=$stmt->RecordCount();
@@ -358,7 +363,7 @@
   </tr>
 </table>
    
-<div align="center"><small>Powered by Gadeksystems(Softbox) www.gadeksystems.com| Cape Coast C/R Tel:+244505284060,+233241999094 www.dekITC.com</small></div>
+<div align="center"><small>Powered by GADEK IT Consult(Softbox) | Elmina-Cape Coast C/R Tel:+244505284060,+233241999094 www.gadeksystems.com</small></div>
         
         
         </div> 

@@ -19,7 +19,7 @@
              $id=$_POST['key'];
            
              $counter=count($id);
-              for($i=1;$i<=$counter;$i++){
+              for($i=0;$i<$counter;$i++){
               $query=$sql->Prepare("UPDATE tbl_courses SET year='$year[$i]',term='$term[$i]' WHERE id='$id[$i]'");
              // print_r($query);
               if($sql->Execute($query)){

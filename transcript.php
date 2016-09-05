@@ -75,8 +75,7 @@ $grade=new classes\Grades();
            <tr><td class='aou'>PROGRAMME:</td>    <td class='edu'><?php echo $row->PROGRAMME ?></td>    </tr>
             <tr><td class='aou'>HOUSE:</td>    <td class='edu'><?php echo $row->HOUSE ?></td>    </tr>
        
-         <tr><td class='aou'>DATE ADMITTED:</td>    <td class='edu'><?php echo $row->DATE_ADMITTED ?></td>    </tr>
-         
+           
            </table></center>
                             <hr>
                              <?php
@@ -85,12 +84,12 @@ $grade=new classes\Grades();
                              
                              $rtmt=$sql->Execute($stmt);
         while($row=$rtmt->FetchRow()){
-                for($i=0;$i<3;$i++){
+                for($i=1;$i<=3;$i++){
             $class=$sql->Prepare("SELECT class from tbl_class_members where student='$studentNo' and year='$row[year]' and term='$i'") ;
-            
+             
             $fetch=$sql->Execute($class);
             $classSize=$fetch->RecordCount();
-            if($fetch->RecordCount()>0){
+            
             while($arr=$fetch->FetchRow()){
 
             echo "<div class='text-bolder'><h6>YEAR : $row[year]   TERM : $i FORM : $arr[class]<h6></div>";
@@ -131,10 +130,10 @@ $grade=new classes\Grades();
                     <td><div><?php echo $row[posInSubject];?></div></td>
                     <td><div><?php $a= $grade->getGradeValue($row[total]);echo $a->GRADE; $ttotal+=$row[total]; ?></div></td>
                     <td><div>
-                      <?php $stmt=$sql->Prepare("select grade,valu from tbl_gradedefinition where   lower <=$row[total]  and upper >= $row[total]   ")  ;
+                      <?php $stmt=$sql->Prepare("select grade,valu ,comment from tbl_gradedefinition where   lower <=$row[total]  and upper >= $row[total]   ")  ;
                       $rt=$sql->Execute($stmt);
                       while($out= $rt->FetchRow()){
-				  echo $out['grade'];
+				  echo $out['comment'];
 				  $va=$out['valu'];
 				  }
 				  $aggregade+=$va;
@@ -166,13 +165,13 @@ $grade=new classes\Grades();
         else{echo "<div>No assessment records for this term</div>";}
                 
         
-        }
+        
                 
                 
                 }
         }?>
 
-                                 
+                      
                                
         </body>
 

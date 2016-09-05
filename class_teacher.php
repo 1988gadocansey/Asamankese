@@ -17,7 +17,7 @@
 		  $counter=$_POST["counter"];
 		   $class=$_POST["class"];
 		   $teacher=$_POST["teacher"];
-		  for($i=1;$i<=$counter;$i++){
+		  for($i=0;$i<$counter;$i++){
 			  
 		  
 		   $classes=$class[$i];

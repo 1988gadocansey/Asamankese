@@ -18,8 +18,9 @@ if(isset($_POST[sms])){
         
         While($stmt=$rt->FetchRow()){
             $arrayphone=$stmt[GUARDIAN_PHONE];
-        
-        if($a=$sms->sendBulkSms($_POST[message],$arrayphone,$stmt[INDEXNO])){
+           // print_r($sms->sendBulkSms($_POST[message],$arrayphone,$stmt[INDEXNO]));
+            
+        if($help->firesms($_POST[message],$arrayphone,$stmt[INDEXNO])){
             $_SESSION[last_query]="";
         
             header("location:students.php?success=1");
@@ -40,9 +41,13 @@ if(isset($_POST[sms])){
     $queryR = $sql->Execute($query2);
     $rowSet = $queryR->FetchNextObject();
     $nextclass = $rowSet->NEXTCLASS;
-
+    if($nextclass=='Alumni'){
+         $query_ = $sql->Prepare("UPDATE tbl_student SET CLASS='Alumni',STATUS='Alumni' WHERE CLASS='$class'");
+   
+    }else{
 
     $query_ = $sql->Prepare("UPDATE tbl_student SET CLASS='$nextclass' WHERE CLASS='$class'");
+    }
     // print_r($query_);
     $sql->Execute($query_);
 
@@ -445,8 +450,7 @@ td{
                                     <td><?php  echo $rt[STATUS]; ?></td>
                                     <td>
                                         <a     href="addStudent.php?indexno=<?php  echo $rt[INDEXNO]?>" title="click to edit" tooltip="click to edit"> <span class="md md-edit"></span>   </a> 
-                                        <a  onclick="return MM_openBrWindow('report_card.php?student=<?php  echo $rt[ID]?>','','menubar=yes,width=800,height=650')" title="click to print report card" tooltip="click to print transcript"> <span class="md-print " style="font:90px"></span>   </a> 
-                                        <a  onclick="return MM_openBrWindow('printStudent.php?indexno=<?php  echo $rt[INDEXNO]?>','','menubar=yes,width=800,height=650')"     title="click to view" tooltip="click to view"> <span class="md-pageview "></span>   </a> 
+                                         <a  onclick="return MM_openBrWindow('printStudent.php?indexno=<?php  echo $rt[INDEXNO]?>','','menubar=yes,width=800,height=650')"     title="click to view" tooltip="click to view"> <span class="md-pageview "></span>   </a> 
                                     </td>  
                                 
                                      </tr>
