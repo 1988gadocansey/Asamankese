@@ -84,7 +84,7 @@
        $year=$_SESSION[year];
        if(!empty($year)&& !empty($term)){
          for($i=0;$i<count($students);$i++){
-            $query1 = $sql->Prepare("SELECT courseId,grade from tbl_assesments where term='$term' and year='$year' and  stuId='$students[$i]' and class='$class'");
+            $query1 = $sql->Prepare("SELECT courseId,grade from tbl_assesments where term='$term' and year='$year' and  stuId='$students[$i]' and class='$class' and total>0");
             //print_r($query1);
             $query = $sql->Execute($query1);
             
@@ -99,14 +99,14 @@
          
         // print_r($datascore);
         for($i=0;$i<count($students);$i++){
-          
+           set_time_limit(1100);
 			 $phone=getPhone($students[$i]);
 			
 			 $message="Result for ".$help->getName($students[$i])." Form:".$class." Term:".$term." Grades: ".rtrim($datascore[$students[$i]],',');
                         //print_r($message);
                          $name=$help->getName($students[$i]);
                           $help->firesms($message, $phone, $name) ;
-		         set_time_limit(500);
+		        
                           
 
 		 
@@ -324,13 +324,18 @@
                                      <th data-column-id="Student" data-type=" " data-toggle="tooltip">Student</th>
                                      <?php 
                                      
-                                        $queryy=$sql->prepare("SELECT distinct courseId FROM `tbl_assesments` WHERE class='$class' ORDER BY courseId");
+                                        $queryy=$sql->prepare("SELECT distinct courseId FROM `tbl_assesments` WHERE class='$class'  ORDER BY courseId");
                                         $query_=$sql->Execute($queryy);
                                         while($row=$query_->FetchRow()){
-                                            //$courseArray=array();
-                                           
-                                           $course=$row['courseId'];
+                                            //$courseArray=array();$course=$row['courseId'];
+                                             $course=$row['courseId'];
+                                            if($course!=""){
+                                         
                                             $courseArray[]=$course;
+                                           }
+                                           else{
+                                              $courseArray[]="N/A"; 
+                                           }
                                      ?>
                                       
                                      <th data-column-id="Exam Score" data-order="asc" style="text-align:"><?php echo getCourse($row['courseId'])?></th>
@@ -338,7 +343,7 @@
                                 </tr>
                             </thead>
                             <?php
-                                $query11= $sql->Prepare( "SELECT DISTINCT tbl_assesments.stuId as stuId from tbl_assesments WHERE 1 $ter $inse $ins $in $search_ ORDER BY stuId ASC");
+                                $query11= $sql->Prepare( "SELECT DISTINCT tbl_assesments.stuId as stuId from tbl_assesments WHERE 1  $ter $inse $ins $in $search_ ORDER BY stuId ASC");
                               // print_r($query11);             
                                 $rs = $sql->PageExecute($query11,RECORDS_BY_PAGE,CURRENT_PAGE);
                                                       $recordsFound = $rs->_maxRecordCount;    // total record found
