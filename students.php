@@ -43,14 +43,32 @@ if(isset($_POST[sms])){
     $nextclass = $rowSet->NEXTCLASS;
     if($nextclass=='Alumni'){
          $query_ = $sql->Prepare("UPDATE tbl_student SET CLASS='Alumni',STATUS='Alumni' WHERE CLASS='$class'");
+    $query2_ = $sql->Prepare("UPDATE tbl_class_members SET class='Alumni'  WHERE class='$class'");
    
     }else{
 
+        //first promote those students in the class you are
+        // promoting this new class to in order that the two 
+        // class wouldn't be merge as one class
+         $query2 = $sql->Prepare("SELECT nextClass FROM tbl_classes WHERE name='$nextclass'");  
+         $row=$sql->Execute($query2);
+         $output=$row->FetchNextObject();
+         $oldClass=$output->NEXTCLASS;
+         $queryOld = $sql->Prepare("UPDATE tbl_student SET CLASS='$oldClass' WHERE CLASS='$nextclass'");
+    
+    $queryOld_ = $sql->Prepare("UPDATE tbl_class_members SET class='$oldClass'  WHERE class='$nextclass'");
+   $sql->Execute($queryOld);
+    $sql->Execute($queryOld_);
+    
+    // promote that class
     $query_ = $sql->Prepare("UPDATE tbl_student SET CLASS='$nextclass' WHERE CLASS='$class'");
+    
+    $query2_ = $sql->Prepare("UPDATE tbl_class_members SET class='$nextclass'  WHERE class='$class'");
+    $sql->Execute($query_);
+    $sql->Execute($query2_);
     }
     // print_r($query_);
-    $sql->Execute($query_);
-
+   
 
     header("location:students.php?success=1");
     }

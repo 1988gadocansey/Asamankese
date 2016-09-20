@@ -92,7 +92,7 @@
               P.O.BOX 110, Asamankese E/R<br/>Tel:<?PHP  echo $config->SCHOOL_TELEPHONE;?></h4>
                 <hr style="color:black">
       </td>
-             <td valign="baseline"><img <?php echo $help->picture("studentPhotos/$row->INDEXNO.jpg",120)?> style="margin-left: 103px" src="<?php echo "studentPhotos/$studentNo.jpg" ?>" alt="" /></td>
+             <td valign="baseline"><img <?php echo $help->picture("studentPhotos/$row->INDEXNO.jpg",120)?> style="margin-left: 103px" src="<?php echo "studentPhotos/$row->INDEXNO.jpg" ?>" alt="" /></td>
       
         </tr>
         <tr>

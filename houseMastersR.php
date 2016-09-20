@@ -194,7 +194,7 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                                                 if($class=="All class" or $class==""){ $class=""; }else {$class_=" and  tbl_class_members.class = '$class' "  ;}
                                               if($term=="All term" or $term==""){ $term=""; }else {$term_=" and  tbl_class_members.term = '$term' "  ;}
                     $house= houses($teacher->IDS); 
-                 $query=$sql->Prepare("SELECT DISTINCT  total,position,attendance,house_mast_report,tbl_class_members.class,promotedTo,surname,othernames,tbl_class_members.id as id,tbl_student.indexno as idd from tbl_class_members,tbl_student,tbl_classes   where 1 and tbl_class_members.year='$school->YEAR' and tbl_class_members.term ='$school->TERM' and tbl_class_members.student=tbl_student.indexno and tbl_student.status='In school' and tbl_student.house='$house'  $term_ $class_ $year_");		
+                 $query=$sql->Prepare("SELECT DISTINCT  total,position,attendance,house_mast_report,tbl_class_members.class,promotedTo,surname,othernames,tbl_class_members.id as id,tbl_student.indexno as idd from tbl_class_members,tbl_student,tbl_classes   where 1 and tbl_class_members.year='$school->YEAR' and tbl_class_members.term ='$school->TERM' and tbl_student.GENDER='$teacher->SEX' and tbl_class_members.student=tbl_student.indexno and tbl_student.status='In school' and tbl_student.house='$house'  $term_ $class_ $year_");		
                 $query=$query." ORDER BY total desc,tbl_student.surname asc";
               //print_r($query);
                 $rs = $sql->PageExecute($query,30);
