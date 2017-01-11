@@ -26,12 +26,12 @@
          function houses($teacher){
              global $sql;
              global $school;
-             $query1=$sql->Prepare("SELECT id from tbl_house where master='$teacher' ");
+             $query1=$sql->Prepare("SELECT house from tbl_house where master='$teacher' ");
              //print_r($query1);
              $query=$sql->Execute($query1);
              
              $row=$query->FetchNextObject();
-             return $row->ID;
+            return $row->HOUSE  ;
          }
         
         // checked if we are in current or new academic year ie new term or new year

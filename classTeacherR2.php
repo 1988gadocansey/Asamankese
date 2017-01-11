@@ -8,7 +8,7 @@
         $school=$school->getAcademicYearTerm();
         $student=new classes\Student();		   
         $app=new classes\structure();
-         
+        $help=new classes\helpers();
         $notify=new classes\Notifications();
         $app->gethead();
         $teacher_ob=new classes\Teacher();  $teacher=$teacher_ob->getTeacher_ID($_SESSION[ID]);
@@ -27,13 +27,12 @@
          
         
         // checked if we are in current or new academic year ie new term or new year
-        $query2=$sql->Prepare("SELECT  year,term FROM tbl_class_members order by year DESC LIMIT 1;");		  
+        $query2=$sql->Prepare("SELECT  year,term FROM tbl_class_members order by year DESC");		  
         $query22=$sql->Execute($query2);
         while($rss= $query22->FetchRow())
         {
                 $years=$rss['year'];
                 $terms=$rss['term'];
-               
          }
         $query=$sql->Prepare("SELECT  name,nextClass FROM tbl_classes order by name");		  
         $query=$sql->Execute($query);
@@ -76,16 +75,15 @@
         $promoted_=$promoted[$i];
  
         $dates=date('M/Y');
-         // echo $school->YEAR ;echo $school->TERM;
         
              if($school->YEAR==$years && $school->TERM==$terms){
-             $query=$sql->Prepare("update tbl_class_members set attendance='$attend_',conduct='$conduct_',interest='$interest_',form_mast_report='$class_teacher_',year='$school->YEAR',term='$school->TERM' where id='$id'");
-             // print_r($query);
+             $query=$sql->Prepare("update tbl_class_members set attendance='$attend_',promotedTo='$promoted_',conduct='$conduct_',interest='$interest_',attitude='$attitude_',form_mast_report='$class_teacher_',year='$school->YEAR',term='$school->TERM' where  id='$id'");
+             print_r($query);
              
              }
              else{
-                 $query=$sql->Prepare("Insert into tbl_class_members set class='$form_', student='$student', attendance='$attend_',conduct='$conduct_',interest='$interest_',form_mast_report='$class_teacher_',year='$school->YEAR',term='$school->TERM' ");
-               // print_r($query);
+                 $query=$sql->Prepare("Insert into tbl_class_members set class='$form_', student='$student', attendance='$attend_',promotedTo='$promoted_',conduct='$conduct_',interest='$interest_',attitude='$attitude_',form_mast_report='$class_teacher_',year='$school->YEAR',term='$school->TERM' ");
+                print_r($query);
              }
              
               $sql->Execute($query);
@@ -141,7 +139,7 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                         
                         <div class="card-header">
                            <p>
-                               Form Master/Mistress Reports for <strong><?php echo $school->YEAR .' Year '. $school->TERM .'term';?></strong>
+                               Prepare Reports for <strong><?php echo $school->YEAR .' Year '. $school->TERM .'term';?></strong>
                             </p>
                           <div style="margin-top:-3%;float:right">
                                  
@@ -260,13 +258,13 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                                     <th data-column-id="Attendance" data-order="asc" style="text-align:">Attendance</th>
                                        
                                        <th data-column-id="Conduct" style="text-align: ">Conduct</th>
-                                    <!-- <th data-column-id="Attitude">Attitude</th>-->
+                                     <th data-column-id="Attitude">Attitude</th>
                                     <th data-column-id="Interest" data-order="asc" style="text-align: ">Interest</th>
                                 
-                                     <th data-column-id="Class teacher Report" data-order="asc" style="text-align: ">Class Teachers Remarks</th>
+                                     <th data-column-id="Class teacher Report" data-order="asc" style="text-align: ">Class Teachers Report</th>
                                    
                                        <?php  if($school->TERM=='3'){?>
-                                      <!-- <th data-column-id="Promoted" data-order="asc" style="text-align: ">Promoted to</th>-->
+                                       <th data-column-id="Promoted" data-order="asc" style="text-align: ">Promoted to</th>
                                      
                                        <?php }?>
                                        
@@ -284,11 +282,11 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                                                 if($class=="All class" or $class==""){ $class=""; }else {$class_=" and  tbl_class_members.class = '$class' "  ;}
                                               if($term=="All term" or $term==""){ $term=""; }else {$term_=" and  tbl_class_members.term = '$term' "  ;}
                                  $classs=  classTeaches($teacher->EMP_NUMBER);    
-                                 //print_r($classs);
+                                 // print_r($teacher->EMP_NUMBER);
                  $query=$sql->Prepare("SELECT DISTINCT  total,position,attendance,form_mast_report,conduct,interest,attitude,tbl_class_members.class,promotedTo,surname,othernames,tbl_class_members.id as id,tbl_student.indexno as idd from tbl_class_members,tbl_student,tbl_classes   where 1 and tbl_class_members.year='$school->YEAR' and tbl_class_members.term ='$school->TERM' and tbl_class_members.student=tbl_student.indexno and tbl_student.class='$classs' and tbl_student.status='In school'   $term_ $class_ $year_");		
-                $query=$query." ORDER BY tbl_student.surname asc";
-             // print_r($query);
-                $rs = $sql->PageExecute($query,100);
+                $query=$query." ORDER BY total desc,tbl_student.surname asc";
+              //print_r($query);
+                $rs = $sql->PageExecute($query,30);
                 $recordsFound = $rs->_maxRecordCount;    // total record found
                                                       
                                             
@@ -340,7 +338,7 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                    </select>
                    
                 </td>
-               <!-- <td><select class=''  name='attitude[]'  onClick="beginEditing(this);" onBlur="finishEditing();"  >
+                <td><select class=''  name='attitude[]'  onClick="beginEditing(this);" onBlur="finishEditing();"  >
                         <option value=''>select attitude</option>
                                <?php 
                             global $sql;
@@ -359,7 +357,7 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
 
                            <?php }?>
 
-                   </select></td>-->
+                   </select></td>
                 <td><select name="interest[]"  onBlur="finishEditing();">
                  <option value=''>select interest</option>
                                <?php 
@@ -406,7 +404,7 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                 
                 </td>
               <?php  if($school->TERM=='3'){?>
-               <!-- <td><label>
+                <td><label>
                   <select name="promoted[]"    >
                  <option value=''>select promotion</option>
                                <?php 
@@ -427,7 +425,7 @@ function MM_openBrWindow(theURL,winName,features) { //v2.0
                            <?php }?>
 
                 </select>
-              </label></td> --> <?php }?>
+              </label></td><?php }?>
                 <td><div align="center"><?php echo $rtmt[position]; ?> </div>
                     
                       <label></label>

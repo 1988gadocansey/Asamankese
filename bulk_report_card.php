@@ -241,7 +241,7 @@
 		  
                 $stmt3=$sql->Execute($stmt2);
                 $ttt=$stmt3->RecordCount();
-
+                $ttotale=0.0;  $cout=0;
                 while($r =$stmt3->FetchRow())
 
                 {
@@ -288,7 +288,7 @@
           </tr>
             
             
-            
+    <?php $ttotale=0.0; $ttt=0.0;$cout=0;?>
             
             
             
